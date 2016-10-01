@@ -34,7 +34,7 @@ var Game = {
 			criaTiros();
 			//Texto
 			perguntaMatematica = '5 + 6 = ?';
-			texto = jogo.add.text(jogo.world.centerX - 100, jogo.world.centerY - 300, perguntaMatematica, {
+			textoPergunta = jogo.add.text(jogo.world.centerX - 100, jogo.world.centerY - 300, perguntaMatematica, {
 				font: "65px Arial",
 		        fill: "#ff0044",
 		        align: "center"
@@ -45,7 +45,7 @@ var Game = {
 				font: '32px Arial',
 				fill: '#ff0044',
 				align: 'center'
-			});	
+			});
 
 			// Meteoros com a resposta
 			meteoros = jogo.add.group();

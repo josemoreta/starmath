@@ -40,22 +40,32 @@ function criaTiros(){
 }
 
 function criaMeteoros(){
+	// reseta posição do gurpo no eixo y
+	meteoros.y = 0;
 	// Cria cada meteoro a partir do grupo de meteoros
-		meteoroCerto = meteoros.create(getRandomInt(10,600), 25,'meteoroCerto');
-		meteoroCerto.anchor.setTo(0.5,0.5);	
+	meteoroCerto = meteoros.create(getRandomInt(10,600), 25,'meteoroCerto');
+	meteoroCerto.anchor.setTo(0.5,0.5);	
 
-		meteoroErrado1 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
-		meteoroErrado1.anchor.setTo(0.5, 0.5);
+	meteoroErrado1 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
+	meteoroErrado1.anchor.setTo(0.5, 0.5);
 
-		meteoroErrado2 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
-		meteoroErrado2.anchor.setTo(0.5, 0.5);
+	meteoroErrado2 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
+	meteoroErrado2.anchor.setTo(0.5, 0.5);
+
+
 }
 
 function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	tiroQueAcertou.kill();
-	meteoro.kill();
+	meteoro.kill();	
+	meteoroErrado1.kill();
+	meteoroErrado2.kill();
 	pontuacao += 20;
+	textoPontuacao.text = pontuacao;
+	criaMeteoros();
+	
 }
+
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
 	tiroQueAcertou.kill();
