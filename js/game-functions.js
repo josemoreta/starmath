@@ -3,8 +3,7 @@ function carregaRecursos(){
 	jogo.load.image('navinha', 'recursos/imagens/navinha.png');
 	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
 	jogo.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
-	jogo.load.image('meteoro', 'recursos/imagens/meteoroErrado.png');
-	//jogo.load.image('meteoroCerto', 'recursos/imagens/meteoroCerto.png');
+	jogo.load.image('meteoro', 'recursos/imagens/meteoro.png');
 }
 
 function criaCenarioBackground(){
@@ -39,11 +38,14 @@ function criaTiros(){
 	botaoAtirar = jogo.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
+
 function criaMeteoros(){
 	// reseta posição do gurpo no eixo y
 	meteoros.y = 0;
-	// Cria cada meteoro a partir do grupo de meteoros
-	meteoroCerto = meteoros.create(getRandomInt(10,600), 25,'meteoro');
+
+	let posicoes = getPosicaoMeteoros();
+
+	meteoroCerto = meteoros.create(posicoes[0], 25,'meteoro');
 	meteoroCerto.anchor.setTo(0.5,0.5);		
     textCorreto = jogo.add.text(meteoroCerto.x, meteoroCerto.y, respostaCorreta, { 
     	font: "20px Arial",
@@ -54,28 +56,26 @@ function criaMeteoros(){
     textCorreto.anchor.set(0.5, 0.5);
     
 
-	meteoroErrado1 = meteoros.create(getRandomInt(10, 600), 25, 'meteoro');
+	meteoroErrado1 = meteoros.create(posicoes[1], 25, 'meteoro');
 	meteoroErrado1.anchor.setTo(0.5, 0.5);
 	textErrado1 = jogo.add.text(meteoroErrado1.x, meteoroErrado1.y, respostaCorreta - getRandomInt(1,7), { 
     	font: "20px Arial",
     	fill: "#ffffff",
     	wordWrap: true,
     	wordWrapWidth: meteoroErrado1.width,
-    	align: "center" });
+    	align: "center" });	
 	textErrado1.anchor.set(0.5, 0.5);
 
 
-	meteoroErrado2 = meteoros.create(getRandomInt(10, 600), 25, 'meteoro');
+	meteoroErrado2 = meteoros.create(posicoes[2], 25, 'meteoro');
 	meteoroErrado2.anchor.setTo(0.5, 0.5);
-	textErrado2 = jogo.add.text(meteoroErrado2.x, meteoroErrado2.y, respostaCorreta - getRandomInt(1,7), { 
+	textErrado2 = jogo.add.text(meteoroErrado2.x, meteoroErrado2.y, respostaCorreta - getRandomInt(1,3), { 
     	font: "20px Arial",
     	fill: "#ffffff",
     	wordWrap: true,
     	wordWrapWidth: meteoroErrado2.width,
     	align: "center" });
 	textErrado2.anchor.set(0.5, 0.5);
-
-
 }
 
 function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
@@ -87,8 +87,6 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	textErrado1.kill();
 	textErrado2.kill();
 	pontuacao += 20;
-	
-
 	textoPontuacao.text = pontuacao;
 	alteraPergunta();
 	criaMeteoros();
@@ -96,8 +94,8 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 
 
 function alteraPergunta(){
-	var a = getRandomInt(0, 30);
-	var b = getRandomInt(15, 40);
+	var a = getRandomInt(1, 11);
+	var b = getRandomInt(1, 11);
 	respostaCorreta = a + b;
 	textoPergunta.text = a + '+' + b + " = ?"
 }
@@ -147,11 +145,39 @@ function atira(){
 			somTiro.play();
 		}
 	}
-
-
 }
 
+function getPosicaoMeteoros(){
+	let posicoes = [
+		getRandomInt(10, 710),
+		getRandomInt(10, 710),
+		getRandomInt(10, 710)];
 
+	//adiciona lógica para controlar a posição dos meteoros
+	posicoes.sort();
+	let temp = 0;
+	for(let i = 1; i < 3; i++, temp++){
+		if(posicoes[i] - posicoes[temp] < 42){
+			posicoes[i] += 42;
+			let otherTemp = 0;
+			for(let j = 1; j < 3; j++, otherTemp++){
+				if(posicoes[j] - posicoes[otherTemp] < 42){
+					posicoes[j] += 42;
+				}
+			}
+		} else if (posicoes[temp] - posicoes[i] < 42){
+			posicoes[temp] += 42;
+			let otherTemp2 = 0;
+			for(let j = 1; j < 3; j++, otherTemp2++){
+				if(posicoes[j] - posicoes[otherTemp2] < 42){
+					posicoes[j] += 42;
+				}
+			}		
+		}
+	}
+
+	return posicoes;
+}
 
 
 
