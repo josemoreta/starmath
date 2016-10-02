@@ -3,8 +3,8 @@ function carregaRecursos(){
 	jogo.load.image('navinha', 'recursos/imagens/navinha.png');
 	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
 	jogo.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
-	jogo.load.image('meteoroErrado', 'recursos/imagens/meteoroErrado.png');
-	jogo.load.image('meteoroCerto', 'recursos/imagens/meteoroCerto.png');
+	jogo.load.image('meteoro', 'recursos/imagens/meteoroErrado.png');
+	//jogo.load.image('meteoroCerto', 'recursos/imagens/meteoroCerto.png');
 }
 
 function criaCenarioBackground(){
@@ -43,14 +43,37 @@ function criaMeteoros(){
 	// reseta posição do gurpo no eixo y
 	meteoros.y = 0;
 	// Cria cada meteoro a partir do grupo de meteoros
-	meteoroCerto = meteoros.create(getRandomInt(10,600), 25,'meteoroCerto');
-	meteoroCerto.anchor.setTo(0.5,0.5);	
+	meteoroCerto = meteoros.create(getRandomInt(10,600), 25,'meteoro');
+	meteoroCerto.anchor.setTo(0.5,0.5);		
+    textCorreto = jogo.add.text(meteoroCerto.x, meteoroCerto.y, respostaCorreta, { 
+    	font: "20px Arial",
+    	fill: "#ffffff",
+    	wordWrap: true,
+    	wordWrapWidth: meteoroCerto.width,
+    	align: "center" });
+    textCorreto.anchor.set(0.5, 0.5);
+    
 
-	meteoroErrado1 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
+	meteoroErrado1 = meteoros.create(getRandomInt(10, 600), 25, 'meteoro');
 	meteoroErrado1.anchor.setTo(0.5, 0.5);
+	textErrado1 = jogo.add.text(meteoroErrado1.x, meteoroErrado1.y, respostaCorreta - getRandomInt(1,7), { 
+    	font: "20px Arial",
+    	fill: "#ffffff",
+    	wordWrap: true,
+    	wordWrapWidth: meteoroErrado1.width,
+    	align: "center" });
+	textErrado1.anchor.set(0.5, 0.5);
 
-	meteoroErrado2 = meteoros.create(getRandomInt(10, 600), 25, 'meteoroErrado');
+
+	meteoroErrado2 = meteoros.create(getRandomInt(10, 600), 25, 'meteoro');
 	meteoroErrado2.anchor.setTo(0.5, 0.5);
+	textErrado2 = jogo.add.text(meteoroErrado2.x, meteoroErrado2.y, respostaCorreta - getRandomInt(1,7), { 
+    	font: "20px Arial",
+    	fill: "#ffffff",
+    	wordWrap: true,
+    	wordWrapWidth: meteoroErrado2.width,
+    	align: "center" });
+	textErrado2.anchor.set(0.5, 0.5);
 
 
 }
@@ -60,10 +83,23 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	meteoro.kill();	
 	meteoroErrado1.kill();
 	meteoroErrado2.kill();
+	textCorreto.kill();
+	textErrado1.kill();
+	textErrado2.kill();
 	pontuacao += 20;
-	textoPontuacao.text = pontuacao;
-	criaMeteoros();
 	
+
+	textoPontuacao.text = pontuacao;
+	alteraPergunta();
+	criaMeteoros();
+}
+
+
+function alteraPergunta(){
+	var a = getRandomInt(0, 30);
+	var b = getRandomInt(15, 40);
+	respostaCorreta = a + b;
+	textoPergunta.text = a + '+' + b + " = ?"
 }
 
 

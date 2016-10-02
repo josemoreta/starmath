@@ -13,9 +13,8 @@ var tiroVelocidade;
 var somTiro;
 // Elementos textuais
 var textoPergunta;
-var perguntaMatematica;
-
 var textoPontuacao;
+
 var pontuacao;
 // Meteoros com a resposta
 var meteoros;
@@ -23,7 +22,10 @@ var meteoroCerto;
 var meteoroErrado1;
 var meteoroErrado2;
 
+var respostaCorreta;
+
 var Game = {
+
 	preload: function(){
 		carregaRecursos();
 	},
@@ -33,12 +35,12 @@ var Game = {
 			criaNave();
 			criaTiros();
 			//Texto
-			perguntaMatematica = '5 + 6 = ?';
-			textoPergunta = jogo.add.text(jogo.world.centerX - 100, jogo.world.centerY - 300, perguntaMatematica, {
+			textoPergunta = jogo.add.text(jogo.world.centerX - 100, jogo.world.centerY - 300, '', {
 				font: "65px Arial",
 		        fill: "#ff0044",
 		        align: "center"
 			});
+			alteraPergunta();
 
 			pontuacao = 0;
 			textoPontuacao = jogo.add.text(jogo.world.centerX + 325, jogo.world.centerY - 300, pontuacao,{
@@ -57,7 +59,25 @@ var Game = {
 	update: function(){
 		atualizoes();
 		// Faz meteoros descer (O GRUPO)
-		meteoros.y += 0.5;
+		
+
+		if(pontuacao > 40){
+			meteoros.y += 1;
+			textCorreto.y +=  1;
+			textErrado1.y += 1;
+			textErrado2.y += 1;
+		} else if(pontuacao > 100){
+			meteoros.y += 8;
+			textCorreto.y +=  1.5;
+			textErrado1.y += 1.5;
+			textErrado2.y += 1.5;
+		} else {
+			meteoros.y += 0.5;			
+			textCorreto.y +=  0.5;
+			textErrado1.y += 0.5;
+			textErrado2.y += 0.5;
+		}
+
 		// Identificando colisão para cada um dos meteoros
 			// objetos que recebem colisao, funcao, 
 		jogo.physics.arcade.overlap(tiro, meteoroCerto, quandoAconteceColisaoCorreta, null, this);
