@@ -16,4 +16,4 @@ Basicamente, a criança deve atirar com a nave no meteoro que responde a pergunt
 
 ## Tecnologias utilizadas
 
-Para o desenvolvimento do StarMath é utilizado JavaScript e HTML5, tendo como ferramenta principal a biblioteca [Phaser.js](http://phaser.io/ "Phaser").Phaser.js que nos permite desenhar com facilidade no Canvas.
+Para o desenvolvimento do StarMath é utilizado JavaScript e HTML5, tendo como ferramenta principal a biblioteca [Phaser.js](http://phaser.io/ "Phaser") que nos permite desenhar com facilidade no Canvas.
