@@ -179,8 +179,12 @@ function getPosicaoMeteoros(){
 	return posicoes;
 }
 
-
-
 function getRandomInt(min, max) {
  	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function gameOverPorPosicao(meteoros){
+	if (meteoros.y > 600) {
+		jogo.state.start('Game-over');
+	}
 }
