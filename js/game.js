@@ -14,7 +14,8 @@ var somTiro;
 // Elementos textuais
 var textoPergunta;
 var textoPontuacao;
-
+var textoVidas;
+var vidas;
 var pontuacao;
 // Meteoros com a resposta
 var meteoros;
@@ -31,9 +32,10 @@ var Game = {
 	},
 
 	create: function(){
-			criaCenarioBackground();
+			criaCenarioEBackground();
 			criaNave();
 			criaTiros();
+			
 			//Texto
 			textoPergunta = jogo.add.text(jogo.world.centerX - 100, jogo.world.centerY - 300, '', {
 				font: "65px Arial",
@@ -43,7 +45,14 @@ var Game = {
 			alteraPergunta();
 
 			pontuacao = 0;
-			textoPontuacao = jogo.add.text(jogo.world.centerX + 325, jogo.world.centerY - 300, pontuacao,{
+			textoPontuacao = jogo.add.text(jogo.world.centerX + 325, jogo.world.centerY - 290, pontuacao,{
+				font: '32px Arial',
+				fill: '#ff0044',
+				align: 'center'
+			});
+
+			vidas = 3;
+			textoVidas = jogo.add.text(jogo.world.centerX - 325, jogo.world.centerY - 290, vidas,{
 				font: '32px Arial',
 				fill: '#ff0044',
 				align: 'center'
@@ -59,7 +68,6 @@ var Game = {
 	update: function(){
 		atualizoes();
 		// Faz meteoros descer (O GRUPO)
-		
 
 		if(pontuacao > 40){
 			meteoros.y += 1;
@@ -78,13 +86,13 @@ var Game = {
 			textErrado2.y += 0.5;
 		}
 
-		gameOverPorPosicao(meteoros);
-
 		// Identificando colisão para cada um dos meteoros
-			// objetos que recebem colisao, funcao, 
+		// objetos que recebem colisao, funcao, 
 		jogo.physics.arcade.overlap(tiro, meteoroCerto, quandoAconteceColisaoCorreta, null, this);
 		jogo.physics.arcade.overlap(tiro, meteoroErrado1, quandoAconteceColisaoErrada, null, this);
 		jogo.physics.arcade.overlap(tiro, meteoroErrado2, quandoAconteceColisaoErrada, null, this);
 
+		gameOverPorPosicao(meteoros);
+		
 	}
 };

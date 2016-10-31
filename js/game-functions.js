@@ -4,10 +4,13 @@ function carregaRecursos(){
 	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
 	jogo.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
 	jogo.load.image('meteoro', 'recursos/imagens/meteoro.png');
+	jogo.load.image('explosao', 'recursos/imagens/explosao.png');
+	jogo.load.image('coracao', 'recursos/imagens/coracao.png');
 }
 
-function criaCenarioBackground(){
+function criaCenarioEBackground(){
 	cenario = jogo.add.tileSprite(0, 0, 800, 600, 'cenario'); // x, y, width, heigth, key
+	coracao = jogo.add.sprite(jogo.world.centerX - 385, jogo.world.centerY - 295, 'coracao');
 	velocidadeScrollCenario = 2;
 }
 
@@ -38,7 +41,6 @@ function criaTiros(){
 	botaoAtirar = jogo.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
-
 function criaMeteoros(){
 	// reseta posição do gurpo no eixo y
 	meteoros.y = 0;
@@ -47,34 +49,34 @@ function criaMeteoros(){
 
 	meteoroCerto = meteoros.create(posicoes[0], 25,'meteoro');
 	meteoroCerto.anchor.setTo(0.5,0.5);		
-    textCorreto = jogo.add.text(meteoroCerto.x, meteoroCerto.y, respostaCorreta, { 
-    	font: "20px Arial",
-    	fill: "#ffffff",
-    	wordWrap: true,
-    	wordWrapWidth: meteoroCerto.width,
-    	align: "center" });
-    textCorreto.anchor.set(0.5, 0.5);
-    
+	textCorreto = jogo.add.text(meteoroCerto.x, meteoroCerto.y, respostaCorreta, { 
+		font: "20px Arial",
+		fill: "#ffffff",
+		wordWrap: true,
+		wordWrapWidth: meteoroCerto.width,
+		align: "center" });
+	textCorreto.anchor.set(0.5, 0.5);
+
 
 	meteoroErrado1 = meteoros.create(posicoes[1], 25, 'meteoro');
 	meteoroErrado1.anchor.setTo(0.5, 0.5);
 	textErrado1 = jogo.add.text(meteoroErrado1.x, meteoroErrado1.y, respostaCorreta - getRandomInt(1,7), { 
-    	font: "20px Arial",
-    	fill: "#ffffff",
-    	wordWrap: true,
-    	wordWrapWidth: meteoroErrado1.width,
-    	align: "center" });	
+		font: "20px Arial",
+		fill: "#ffffff",
+		wordWrap: true,
+		wordWrapWidth: meteoroErrado1.width,
+		align: "center" });	
 	textErrado1.anchor.set(0.5, 0.5);
 
 
 	meteoroErrado2 = meteoros.create(posicoes[2], 25, 'meteoro');
 	meteoroErrado2.anchor.setTo(0.5, 0.5);
 	textErrado2 = jogo.add.text(meteoroErrado2.x, meteoroErrado2.y, respostaCorreta - getRandomInt(1,3), { 
-    	font: "20px Arial",
-    	fill: "#ffffff",
-    	wordWrap: true,
-    	wordWrapWidth: meteoroErrado2.width,
-    	align: "center" });
+		font: "20px Arial",
+		fill: "#ffffff",
+		wordWrap: true,
+		wordWrapWidth: meteoroErrado2.width,
+		align: "center" });
 	textErrado2.anchor.set(0.5, 0.5);
 }
 
@@ -92,7 +94,6 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	criaMeteoros();
 }
 
-
 function alteraPergunta(){
 	var a = getRandomInt(1, 11);
 	var b = getRandomInt(1, 11);
@@ -100,12 +101,22 @@ function alteraPergunta(){
 	textoPergunta.text = a + '+' + b + " = ?"
 }
 
-
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
 	tiroQueAcertou.kill();
-	meteoro.kill();
+	meteoroCerto.kill();
+	meteoro.kill();	
+	meteoroErrado1.kill();
+	meteoroErrado2.kill();
+	textCorreto.kill();
+	textErrado1.kill();
+	textErrado2.kill();
+	alteraPergunta();
+	criaMeteoros();
+	vidas -= 1;
+	textoVidas.text = vidas;
 	// verifica vidas e chama game-over
-	jogo.state.start('Game-over');
+	gameOverZeroVidas(vidas);
+	//jogo.state.start('Game-over');
 }
 
 function atualizoes(){
@@ -132,7 +143,7 @@ function atualizoes(){
 function atira(){
 	
 	umTiro = tiro.getFirstExists(false);
-		
+
 	if(jogo.time.now > tiroVelocidade){
 		//console.log('entrou no primeiro if');
 		if(umTiro){
@@ -149,9 +160,9 @@ function atira(){
 
 function getPosicaoMeteoros(){
 	let posicoes = [
-		getRandomInt(10, 710),
-		getRandomInt(10, 710),
-		getRandomInt(10, 710)];
+	getRandomInt(10, 710),
+	getRandomInt(10, 710),
+	getRandomInt(10, 710)];
 
 	//adiciona lógica para controlar a posição dos meteoros
 	posicoes.sort();
@@ -180,11 +191,19 @@ function getPosicaoMeteoros(){
 }
 
 function getRandomInt(min, max) {
- 	return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
 function gameOverPorPosicao(meteoros){
 	if (meteoros.y > 600) {
 		jogo.state.start('Game-over');
+	}
+}
+
+//chama a tela de game over quando acabam as vidas
+function gameOverZeroVidas(vidas) {
+	if(vidas == 0){
+		jogo.state.start('Game-over');		
 	}
 }
