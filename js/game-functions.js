@@ -189,32 +189,14 @@ function atira(){
 
 function getPosicaoMeteoros(){
 	let posicoes = [
-	getRandomInt(10, 710),
-	getRandomInt(10, 710),
-	getRandomInt(10, 710)];
+		getRandomInt(10, 710),
+		getRandomInt(10, 710),
+		getRandomInt(10, 710)
+	];
 
 	//adiciona lógica para controlar a posição dos meteoros
-	posicoes.sort();
-	let temp = 0;
-	for(let i = 1; i < 3; i++, temp++){
-		if(posicoes[i] - posicoes[temp] < 42){
-			posicoes[i] += 42;
-			let otherTemp = 0;
-			for(let j = 1; j < 3; j++, otherTemp++){
-				if(posicoes[j] - posicoes[otherTemp] < 42){
-					posicoes[j] += 42;
-				}
-			}
-		} else if (posicoes[temp] - posicoes[i] < 42){
-			posicoes[temp] += 42;
-			let otherTemp2 = 0;
-			for(let j = 1; j < 3; j++, otherTemp2++){
-				if(posicoes[j] - posicoes[otherTemp2] < 42){
-					posicoes[j] += 42;
-				}
-			}		
-		}
-	}
+	
+
 
 	return posicoes;
 }
