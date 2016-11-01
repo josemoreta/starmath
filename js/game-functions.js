@@ -153,11 +153,11 @@ function atualizoes(){
 	}
 
 	if(controles.left.isDown){
-		navinha.body.velocity.x = -200;
+		navinha.body.velocity.x = -300;
 	}
 
 	if(controles.right.isDown){
-		navinha.body.velocity.x = 200;
+		navinha.body.velocity.x = 300;
 	}
 }
 
@@ -171,7 +171,7 @@ function atira(){
 			//console.log('entrou no segundo if')
 			umTiro.reset(navinha.x,navinha.y);
 			// Quão rápido sobe a bala
-			umTiro.body.velocity.y = -500; //pixels por segundo - rate / velocidade
+			umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
 			// De quanto em quanto tempo sai uma bala
 			tiroVelocidade = jogo.time.now + 200;
 			somTiro.play();
