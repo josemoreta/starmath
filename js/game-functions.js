@@ -93,6 +93,14 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	alteraPergunta();
 	criaMeteoros();
 	
+	/*Implementar lógica de atualização progressiva da dificuldade*/
+	if(pontuacao > 40){
+		velocidadeMovimentacaoMeteoros = 1;
+	}
+	if(pontuacao > 100){
+		velocidadeMovimentacaoMeteoros = 2;
+	}
+
 
 	// O código abaixo faz com que o grupo de tiros seja destruido e em seguida criado novamente, 
 	//para evitar de acertar meteoros errados
@@ -233,5 +241,13 @@ function checkGameOver(){
 
 //chama a tela de game over quando acabam as vidas
 function gameOver() {
+	velocidadeMovimentacaoMeteoros = 0.5;
 	jogo.state.start('Game-over');
+}
+
+function movimentaMeteoros(){
+	meteoros.y += velocidadeMovimentacaoMeteoros;
+	textCorreto.y +=  velocidadeMovimentacaoMeteoros;
+	textErrado1.y += velocidadeMovimentacaoMeteoros;
+	textErrado2.y += velocidadeMovimentacaoMeteoros;
 }

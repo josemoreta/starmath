@@ -6,8 +6,7 @@ var GameOver = {
 	},
 
 	create: function(){
-		//window.plugins.insomnia.allowSleepAgain();
-		
+		//window.plugins.insomnia.allowSleepAgain();		
  	
  		this.add.sprite(0, 0, 'backgroundGameOver');
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'botaoIniciar', this.jogaNovamente, this);

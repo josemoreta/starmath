@@ -22,7 +22,7 @@ var meteoros;
 var meteoroCerto;
 var meteoroErrado1;
 var meteoroErrado2;
-
+var velocidadeMovimentacaoMeteoros  = 0.5;
 var respostaCorreta;
 
 var Game = {
@@ -69,22 +69,9 @@ var Game = {
 		atualizoes();
 		// Faz meteoros descer (O GRUPO)
 
-		if(pontuacao > 40){
-			meteoros.y += 1;
-			textCorreto.y +=  1;
-			textErrado1.y += 1;
-			textErrado2.y += 1;
-		} else if(pontuacao > 100){
-			meteoros.y += 8;
-			textCorreto.y +=  1.5;
-			textErrado1.y += 1.5;
-			textErrado2.y += 1.5;
-		} else {
-			meteoros.y += 0.5;			
-			textCorreto.y +=  0.5;
-			textErrado1.y += 0.5;
-			textErrado2.y += 0.5;
-		}
+		
+		movimentaMeteoros();
+		console.log(velocidadeMovimentacaoMeteoros);
 
 		// Identificando colisão para cada um dos meteoros
 		// objetos que recebem colisao, funcao, 
