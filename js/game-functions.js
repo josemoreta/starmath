@@ -92,6 +92,26 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	textoPontuacao.text = pontuacao;
 	alteraPergunta();
 	criaMeteoros();
+	
+
+	// O código abaixo faz com que o grupo de tiros seja destruido e em seguida criado novamente, 
+	//para evitar de acertar meteoros errados
+	/*
+	tiro.removeAll(true, true, true);
+		tiro = jogo.add.group();
+	// Faz com que os objetos do grupo tenham um 'corpo' e em seguida seta o sistema de fisica aplicado a esses corpos
+	tiro.enableBody = true;
+	tiro.physicsBodyType = Phaser.Physics.ARCADE;
+	// Cria um grupo de 30 sprites usando a imagem da key fornecida
+	tiro.createMultiple(30, 'umTiro');
+	// Posiçao do tiro no bico da nave   ---- Altura em que o tiro sai, pra sair da boca da nave e não do meio da tela
+	tiro.setAll('anchor.x', -0.9);
+	tiro.setAll('anchor.y', 0.8);
+	// Faz o objeto ser killado após sair da tela chamando automaticamente a função inWorld que retorna false	
+	tiro.setAll('outOfBoundsKill', true);
+	tiro.setAll('checkWorldBounds', true);
+	*/
+
 }
 
 function alteraPergunta(){
@@ -115,8 +135,9 @@ function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
 	// verifica vidas e chama game-over
 	vidas--;
 	textoVidas.text = vidas;
-	checkGameOver();	
+	checkGameOver();
 	//jogo.state.start('Game-over');
+
 }
 
 function atualizoes(){
@@ -132,11 +153,11 @@ function atualizoes(){
 	}
 
 	if(controles.left.isDown){
-		navinha.body.velocity.x = -300;
+		navinha.body.velocity.x = -200;
 	}
 
 	if(controles.right.isDown){
-		navinha.body.velocity.x = 300;
+		navinha.body.velocity.x = 200;
 	}
 }
 
@@ -150,9 +171,9 @@ function atira(){
 			//console.log('entrou no segundo if')
 			umTiro.reset(navinha.x,navinha.y);
 			// Quão rápido sobe a bala
-			umTiro.body.velocity.y = -200; //pixels por segundo - rate / velocidade
+			umTiro.body.velocity.y = -500; //pixels por segundo - rate / velocidade
 			// De quanto em quanto tempo sai uma bala
-			tiroVelocidade = jogo.time.now + 300;
+			tiroVelocidade = jogo.time.now + 200;
 			somTiro.play();
 		}
 	}

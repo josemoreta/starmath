@@ -1,24 +1,35 @@
 var GameOver = {
 	preload: function(){
-		
+		this.load.image('botaoMenu','recursos/imagens/botao-menu.png');
+		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');
+
 	},
 
 	create: function(){
-		this.add.button(jogo.world.centerX - 40, jogo.world.centerY - 160, 'botaoIniciar', this.jogaNovamente, this);
-		this.add.button(jogo.world.centerX - 40, jogo.world.centerY - 80, 'botaoOptions', this.voltaProMenu, this);
-		this.add.button(jogo.world.centerX - 40, jogo.world.centerY, 'botaoRanking', this.salvaPontuacao, this);
+		//window.plugins.insomnia.allowSleepAgain();
+		
+ 	
+ 		this.add.sprite(0, 0, 'backgroundGameOver');
+		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'botaoIniciar', this.jogaNovamente, this);
+		this.add.button(this.world.centerX - (245/2), this.world.centerY - 50, 'botaoMenu', this.voltaProMenu, this);
+		this.add.button(this.world.centerX - (245/2), this.world.centerY + 10, 'botaoRanking', this.salvaPontuacao, this);
 
-
-
-		gameOverText = jogo.add.text(jogo.world.centerX - 300, jogo.world.centerY - 250, 'Game-over!! Boa sorte na próxima.', {
-				font: "30px Arial",
-		        fill: "#ff0044",
-		        align: "center"
+		
+		this.add.text(this.world.centerX - 95, this.world.centerY - 250, 'Game-over!!', {
+			font: "34px Arial",
+		    fill: "#ff0044",
+		    align: "center"
 		});
 
-		pontuacaoText = jogo.add.text(jogo.world.centerX - 300, jogo.world.centerY + 250, 'Sua nota foi: '+ pontuacao, {
-				font: "30px Arial",
-		        fill: "#ff0044",
+		this.add.text(this.world.centerX - 50, this.world.centerY + 150, 'Uau!!', {
+		 		font: "34px Arial",
+		         fill: "#ff0044",
+		         align: "center"
+		});
+		
+		this.add.text(this.world.centerX - 80, this.world.centerY + 190, pontuacao + ' pontos', {
+		 		font: "34px Arial",
+		         fill: "#ff0044",
 		        align: "center"
 		});
 	},
@@ -34,4 +45,5 @@ var GameOver = {
 	voltaProMenu: function(){
 		jogo.state.start('Menu');
 	}
+
 };

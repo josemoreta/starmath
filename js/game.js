@@ -80,10 +80,10 @@ var Game = {
 			textErrado1.y += 1.5;
 			textErrado2.y += 1.5;
 		} else {
-			meteoros.y += 3;			
-			textCorreto.y +=  3;
-			textErrado1.y += 3;
-			textErrado2.y += 3;
+			meteoros.y += 0.5;			
+			textCorreto.y +=  0.5;
+			textErrado1.y += 0.5;
+			textErrado2.y += 0.5;
 		}
 
 		// Identificando colisão para cada um dos meteoros
