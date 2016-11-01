@@ -112,10 +112,10 @@ function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
 	textErrado2.kill();
 	alteraPergunta();
 	criaMeteoros();
-	vidas -= 1;
-	textoVidas.text = vidas;
 	// verifica vidas e chama game-over
-	gameOverZeroVidas(vidas);
+	vidas--;
+	textoVidas.text = vidas;
+	checkGameOver();	
 	//jogo.state.start('Game-over');
 }
 
@@ -195,15 +195,22 @@ function getRandomInt(min, max) {
 }
 
 //detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
-function gameOverPorPosicao(meteoros){
-	if (meteoros.y > 600) {
-		jogo.state.start('Game-over');
+function checkGameOver(){
+	if (meteoros.y > 600 && vidas > 0) {
+		vidas--;
+		textoVidas.text = vidas;
+		meteoroErrado1.kill();
+		meteoroErrado2.kill();
+		meteoroCerto.kill();
+		criaMeteoros();
+	} else if(meteoros.y > 600 && vidas <= 0) {
+		gameOver();
+	} else if(vidas <= 0){
+		gameOver();
 	}
 }
 
 //chama a tela de game over quando acabam as vidas
-function gameOverZeroVidas(vidas) {
-	if(vidas == 0){
-		jogo.state.start('Game-over');		
-	}
+function gameOver() {
+	jogo.state.start('Game-over');
 }

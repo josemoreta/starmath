@@ -80,10 +80,10 @@ var Game = {
 			textErrado1.y += 1.5;
 			textErrado2.y += 1.5;
 		} else {
-			meteoros.y += 0.5;			
-			textCorreto.y +=  0.5;
-			textErrado1.y += 0.5;
-			textErrado2.y += 0.5;
+			meteoros.y += 3;			
+			textCorreto.y +=  3;
+			textErrado1.y += 3;
+			textErrado2.y += 3;
 		}
 
 		// Identificando colisão para cada um dos meteoros
@@ -92,7 +92,7 @@ var Game = {
 		jogo.physics.arcade.overlap(tiro, meteoroErrado1, quandoAconteceColisaoErrada, null, this);
 		jogo.physics.arcade.overlap(tiro, meteoroErrado2, quandoAconteceColisaoErrada, null, this);
 
-		gameOverPorPosicao(meteoros);
+		checkGameOver();
 		
 	}
 };
