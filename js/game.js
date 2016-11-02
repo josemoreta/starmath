@@ -9,8 +9,12 @@ var controles;
 var botaoAtirar;
 var tiro;	
 var tiroVelocidade;
-// Barulho do Tiro - audio
+// Audios
 var somTiro;
+var somRespostaCerta;
+var somRespostaErrada;
+var somGameOver;
+var somTema;
 // Elementos textuais
 var textoPergunta;
 var textoPontuacao;

@@ -3,6 +3,10 @@ function carregaRecursos(){
 	jogo.load.image('navinha', 'recursos/imagens/navinha.png');
 	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
 	jogo.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
+	jogo.load.audio('somRespostaCerta', ['recursos/audio/somRespostaCerta.mp3', 'recursos/audio/somRespostaCerta.ogg']);
+	jogo.load.audio('somRespostaErrada', ['recursos/audio/somRespostaErrada.mp3', 'recursos/audio/somRespostaErrada.ogg']);
+	jogo.load.audio('somGameOver', ['recursos/audio/somGameOver.mp3', 'recursos/audio/somGameOver.ogg']);
+	jogo.load.audio('somTema', ['recursos/audio/somTema.mp3', 'recursos/audio/somTema.ogg']);
 	jogo.load.image('meteoro', 'recursos/imagens/meteoro.png');
 	jogo.load.image('explosao', 'recursos/imagens/explosao.png');
 	jogo.load.image('coracao', 'recursos/imagens/coracao.png');
@@ -11,6 +15,8 @@ function carregaRecursos(){
 function criaCenarioEBackground(){
 	cenario = jogo.add.tileSprite(0, 60, 800, 600, 'cenario'); // x, y, width, heigth, key
 	coracao = jogo.add.sprite(jogo.world.centerX - 385, jogo.world.centerY - 295, 'coracao');
+	somTema = jogo.add.audio('somTema');
+	somTema.play(null, null, 0.3, true, null);
 	velocidadeScrollCenario = 2;
 }
 
@@ -81,6 +87,7 @@ function criaMeteoros(){
 }
 
 function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
+	somRespostaCerta = jogo.add.audio('somRespostaCerta');
 	tiroQueAcertou.kill();
 	meteoro.kill();	
 	meteoroErrado1.kill();
@@ -90,6 +97,7 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 	textErrado2.kill();
 	pontuacao += 20;
 	textoPontuacao.text = pontuacao;
+	somRespostaCerta.play();
 	alteraPergunta();
 	criaMeteoros();
 	
@@ -130,6 +138,7 @@ function alteraPergunta(){
 }
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
+	somRespostaErrada = jogo.add.audio('somRespostaErrada');
 	tiroQueAcertou.kill();
 	meteoroCerto.kill();
 	meteoro.kill();	
@@ -143,6 +152,7 @@ function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
 	// verifica vidas e chama game-over
 	vidas--;
 	textoVidas.text = vidas;
+	somRespostaErrada.play();
 	checkGameOver();
 	//jogo.state.start('Game-over');
 
@@ -172,26 +182,28 @@ function atualizoes(){
 function atira(){
 	
 	umTiro = tiro.getFirstExists(false);
+	somTiro.play();
 
 	if(jogo.time.now > tiroVelocidade){
 		//console.log('entrou no primeiro if');
 		if(umTiro){
+			
 			//console.log('entrou no segundo if')
 			umTiro.reset(navinha.x,navinha.y);
 			// Quão rápido sobe a bala
 			umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
 			// De quanto em quanto tempo sai uma bala
 			tiroVelocidade = jogo.time.now + 200;
-			somTiro.play();
+			
 		}
 	}
 }
 
 function getPosicaoMeteoros(){
 	let posicoes = [
-		getRandomInt(10, 710),
-		getRandomInt(10, 710),
-		getRandomInt(10, 710)
+	getRandomInt(10, 710),
+	getRandomInt(10, 710),
+	getRandomInt(10, 710)
 	];
 
 	//adiciona lógica para controlar a posição dos meteoros
@@ -207,16 +219,23 @@ function getRandomInt(min, max) {
 
 //detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
 function checkGameOver(){
+	somGameOver = jogo.add.audio('somGameOver');
 	if (meteoros.y > 600 && vidas > 0) {
 		vidas--;
 		textoVidas.text = vidas;
 		meteoroErrado1.kill();
 		meteoroErrado2.kill();
 		meteoroCerto.kill();
+		somRespostaErrada.play();
 		criaMeteoros();
 	} else if(meteoros.y > 600 && vidas <= 0) {
+		//O parametro 0.2 na função .play é o volume do audio
+		somTema.stop();
+		somGameOver.play(null, null, 0.2, null, null);
 		gameOver();
 	} else if(vidas <= 0){
+		somTema.stop();
+		somGameOver.play(null, null, 0.2, null, null);
 		gameOver();
 	}
 }
@@ -224,7 +243,7 @@ function checkGameOver(){
 //chama a tela de game over quando acabam as vidas
 function gameOver() {
 	if(!setouVelocidade){
-			velocidadeMovimentacaoMeteoros = 0.5;
+		velocidadeMovimentacaoMeteoros = 0.5;
 	}
 	jogo.state.start('Game-over');
 }
