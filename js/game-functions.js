@@ -16,6 +16,7 @@ function criaCenarioEBackground(){
 	cenario = jogo.add.tileSprite(0, 60, 800, 600, 'cenario'); // x, y, width, heigth, key
 	coracao = jogo.add.sprite(jogo.world.centerX - 385, jogo.world.centerY - 295, 'coracao');
 	somTema = jogo.add.audio('somTema');
+	//parametro 0.3 refere-se ao volume, true é para que a musica reproduza em loop
 	somTema.play(null, null, 0.3, true, null);
 	velocidadeScrollCenario = 2;
 }
@@ -171,11 +172,11 @@ function atualizoes(){
 	}
 
 	if(controles.left.isDown && navinha.body.x > 0){
-		navinha.body.velocity.x = -300;
+		navinha.body.velocity.x = -500;
 	}
 
 	if(controles.right.isDown && navinha.body.x < 737){
-		navinha.body.velocity.x = 300;
+		navinha.body.velocity.x = 500;
 	}
 }
 
