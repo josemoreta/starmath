@@ -21,7 +21,7 @@ var Menu = {
 	},
 
 	startOptions: function(){
-		//this.state.start('Options');
+		this.state.start('Opcoes');
 	},
 
 	startRanking: function(){

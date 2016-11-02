@@ -25,6 +25,9 @@ var meteoroErrado2;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var respostaCorreta;
 
+var setouVelocidade;
+
+
 var Game = {
 
 	preload: function(){

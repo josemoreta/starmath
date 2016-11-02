@@ -223,7 +223,9 @@ function checkGameOver(){
 
 //chama a tela de game over quando acabam as vidas
 function gameOver() {
-	velocidadeMovimentacaoMeteoros = 0.5;
+	if(!setouVelocidade){
+			velocidadeMovimentacaoMeteoros = 0.5;
+	}
 	jogo.state.start('Game-over');
 }
 
