@@ -160,11 +160,11 @@ function atualizoes(){
 		atira();	
 	}
 
-	if(controles.left.isDown){
+	if(controles.left.isDown && navinha.body.x > 0){
 		navinha.body.velocity.x = -300;
 	}
 
-	if(controles.right.isDown){
+	if(controles.right.isDown && navinha.body.x < 737){
 		navinha.body.velocity.x = 300;
 	}
 }
