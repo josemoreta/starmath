@@ -67,11 +67,9 @@ var Game = {
 
 	update: function(){
 		atualizoes();
-		// Faz meteoros descer (O GRUPO)
 
-		
-		movimentaMeteoros();
-		console.log(velocidadeMovimentacaoMeteoros);
+				
+		movimentaMeteoros();		
 
 		// Identificando colisão para cada um dos meteoros
 		// objetos que recebem colisao, funcao, 

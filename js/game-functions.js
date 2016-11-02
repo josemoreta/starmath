@@ -9,7 +9,7 @@ function carregaRecursos(){
 }
 
 function criaCenarioEBackground(){
-	cenario = jogo.add.tileSprite(0, 0, 800, 600, 'cenario'); // x, y, width, heigth, key
+	cenario = jogo.add.tileSprite(0, 60, 800, 600, 'cenario'); // x, y, width, heigth, key
 	coracao = jogo.add.sprite(jogo.world.centerX - 385, jogo.world.centerY - 295, 'coracao');
 	velocidadeScrollCenario = 2;
 }
@@ -47,7 +47,7 @@ function criaMeteoros(){
 
 	let posicoes = getPosicaoMeteoros();
 
-	meteoroCerto = meteoros.create(posicoes[0], 25,'meteoro');
+	meteoroCerto = meteoros.create(posicoes[0], 76,'meteoro');
 	meteoroCerto.anchor.setTo(0.5,0.5);		
 	textCorreto = jogo.add.text(meteoroCerto.x, meteoroCerto.y, respostaCorreta, { 
 		font: "20px Arial",
@@ -58,7 +58,7 @@ function criaMeteoros(){
 	textCorreto.anchor.set(0.5, 0.5);
 
 
-	meteoroErrado1 = meteoros.create(posicoes[1], 25, 'meteoro');
+	meteoroErrado1 = meteoros.create(posicoes[1], 76, 'meteoro');
 	meteoroErrado1.anchor.setTo(0.5, 0.5);
 	textErrado1 = jogo.add.text(meteoroErrado1.x, meteoroErrado1.y, respostaCorreta - getRandomInt(1,7), { 
 		font: "20px Arial",
@@ -69,7 +69,7 @@ function criaMeteoros(){
 	textErrado1.anchor.set(0.5, 0.5);
 
 
-	meteoroErrado2 = meteoros.create(posicoes[2], 25, 'meteoro');
+	meteoroErrado2 = meteoros.create(posicoes[2], 76, 'meteoro');
 	meteoroErrado2.anchor.setTo(0.5, 0.5);
 	textErrado2 = jogo.add.text(meteoroErrado2.x, meteoroErrado2.y, respostaCorreta - getRandomInt(1,3), { 
 		font: "20px Arial",
