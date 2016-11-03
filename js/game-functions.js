@@ -1,15 +1,18 @@
 function carregaRecursos(){
-	jogo.load.image('cenario', 'recursos/imagens/cenario.png');
-	jogo.load.image('navinha', 'recursos/imagens/navinha.png');
-	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
+	
 	jogo.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
 	jogo.load.audio('somRespostaCerta', ['recursos/audio/somRespostaCerta.mp3', 'recursos/audio/somRespostaCerta.ogg']);
 	jogo.load.audio('somRespostaErrada', ['recursos/audio/somRespostaErrada.mp3', 'recursos/audio/somRespostaErrada.ogg']);
 	jogo.load.audio('somGameOver', ['recursos/audio/somGameOver.mp3', 'recursos/audio/somGameOver.ogg']);
 	jogo.load.audio('somTema', ['recursos/audio/somTema.mp3', 'recursos/audio/somTema.ogg']);
+	
+	jogo.load.image('cenario', 'recursos/imagens/cenario.png');
+	jogo.load.image('navinha', 'recursos/imagens/navinha.png');
+	jogo.load.image('umTiro', 'recursos/imagens/tiro.png');
 	jogo.load.image('meteoro', 'recursos/imagens/meteoro.png');
 	jogo.load.image('explosao', 'recursos/imagens/explosao.png');
 	jogo.load.image('coracao', 'recursos/imagens/coracao.png');
+
 }
 
 function criaCenarioEBackground(){
@@ -58,7 +61,7 @@ function criaMeteoros(){
 	// reseta posição do gurpo no eixo y
 	meteoros.y = 0;
 
-	let posicoes = getPosicaoMeteoros();
+	getPosicaoMeteoros();
 
 	meteoroCerto = meteoros.create(posicoes[0], 76,'meteoro');
 	meteoroCerto.anchor.setTo(0.5,0.5);		
@@ -91,6 +94,8 @@ function criaMeteoros(){
 		wordWrapWidth: meteoroErrado2.width,
 		align: "center" });
 	textErrado2.anchor.set(0.5, 0.5);
+
+
 }
 
 function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
@@ -140,12 +145,11 @@ function alteraPergunta(){
 	var a = getRandomInt(1, 9);
 	var b = getRandomInt(1, 9);
 
-	if (op == 1) {
+
+	if (op == 1) { //soma
 		respostaCorreta = a + b;
 		textoPergunta.text = a + '+' + b + " = ?"
-	}
-
-	if (op == 2) {
+	} else if (op == 2) { //subtração
 
 		//Evita respostas das operações com negativos
 		if (a < b) {
@@ -156,15 +160,10 @@ function alteraPergunta(){
 
 		respostaCorreta = a - b;
 		textoPergunta.text = a + '-' + b + " = ?"
-	}
-
-	if (op == 3) {
+	} else 	if (op == 3) { //multiplicação
 		respostaCorreta = a * b;
 		textoPergunta.text = a + '*' + b + " = ?"
-	}
-
-	if (op == 4) {
-
+	} else { //divisão -> op == 4
 		//Evita respostas das operações com valores irracionais
 		while(a%b != 0) {
 			var a = getRandomInt(1, 9);
@@ -173,6 +172,7 @@ function alteraPergunta(){
 		respostaCorreta = a / b;
 		textoPergunta.text = a + '/' + b + " = ?"
 	}
+
 }
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
@@ -237,15 +237,39 @@ function atira(){
 }
 
 function getPosicaoMeteoros(){
-	let posicoes = [
-	getRandomInt(10, 710),
-	getRandomInt(10, 710),
-	getRandomInt(10, 710)
+	posicoes = [
+		getRandomInt(10, 670),	
+	 	getRandomInt(10, 670),
+	 	getRandomInt(10, 670)
 	];
 
-	//adiciona lógica para controlar a posição dos meteoros
-	return posicoes;
+	posicoes.sort(function(a,b){
+		return a-b;
+	});
+	console.log('ordenando: '+ posicoes);
+	if(posicoes[1] - posicoes[0] <= 50){
+		posicoes[1] += 50;
+		console.log('primeiro if ' + posicoes);
+	}
+
+	if(posicoes[2] - posicoes[1] <= 50){
+		posicoes[2] += 100;	
+		console.log('segundo if ' + posicoes);	
+	}
+	shuffle();
+	
 }
+// mistura o array posicoes
+function shuffle() {
+    var j, x, i;
+    for (i = posicoes.length; i; i--) {
+        j = Math.floor(Math.random() * i);
+        x = posicoes[i - 1];
+        posicoes[i - 1] = posicoes[j];
+        posicoes[j] = x;
+    }
+}
+
 
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;

@@ -21,7 +21,7 @@ var textoPontuacao;
 var textoVidas;
 var vidas;
 var pontuacao;
-var textoPontos = "Pontos:";
+var textoPontos;
 // Meteoros com a resposta
 var meteoros;
 var meteoroCerto;
@@ -30,6 +30,8 @@ var meteoroErrado2;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var respostaCorreta;
 var setouVelocidade;
+// Array com a posição dos meteoros
+var posicoes;
 
 var Game = {
 
@@ -58,7 +60,7 @@ var Game = {
 				align: 'center'
 			});
 
-			textoPontos = jogo.add.text(jogo.world.centerX + 210, jogo.world.centerY - 290, textoPontos,{
+			textoPontos = jogo.add.text(jogo.world.centerX + 210, jogo.world.centerY - 290, 'Pontos:',{
 				font: '32px Arial',
 				fill: '#ff0044',
 				align: 'center'
