@@ -21,6 +21,7 @@ var textoPontuacao;
 var textoVidas;
 var vidas;
 var pontuacao;
+var textoPontos = "Pontos:";
 // Meteoros com a resposta
 var meteoros;
 var meteoroCerto;
@@ -28,9 +29,7 @@ var meteoroErrado1;
 var meteoroErrado2;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var respostaCorreta;
-
 var setouVelocidade;
-
 
 var Game = {
 
@@ -59,6 +58,12 @@ var Game = {
 				align: 'center'
 			});
 
+			textoPontos = jogo.add.text(jogo.world.centerX + 210, jogo.world.centerY - 290, textoPontos,{
+				font: '32px Arial',
+				fill: '#ff0044',
+				align: 'center'
+			});
+
 			vidas = 3;
 			textoVidas = jogo.add.text(jogo.world.centerX - 325, jogo.world.centerY - 290, vidas,{
 				font: '32px Arial',
@@ -76,7 +81,6 @@ var Game = {
 	update: function(){
 		atualizoes();
 
-				
 		movimentaMeteoros();		
 
 		// Identificando colisão para cada um dos meteoros
@@ -86,6 +90,5 @@ var Game = {
 		jogo.physics.arcade.overlap(tiro, meteoroErrado2, quandoAconteceColisaoErrada, null, this);
 
 		checkGameOver();
-		
 	}
 };

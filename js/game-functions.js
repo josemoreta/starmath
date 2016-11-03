@@ -115,7 +115,6 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 		velocidadeMovimentacaoMeteoros = 2;
 	}
 
-
 	// O código abaixo faz com que o grupo de tiros seja destruido e em seguida criado novamente, 
 	//para evitar de acertar meteoros errados
 	/*
@@ -148,6 +147,7 @@ function alteraPergunta(){
 
 	if (op == 2) {
 
+		//Evita respostas das operações com negativos
 		if (a < b) {
 			temp = a;
 			a = b;
@@ -165,6 +165,7 @@ function alteraPergunta(){
 
 	if (op == 4) {
 
+		//Evita respostas das operações com valores irracionais
 		while(a%b != 0) {
 			var a = getRandomInt(1, 9);
 			var b = getRandomInt(1, 9);
@@ -172,9 +173,6 @@ function alteraPergunta(){
 		respostaCorreta = a / b;
 		textoPergunta.text = a + '/' + b + " = ?"
 	}
-
-	//respostaCorreta = a + b;
-	//textoPergunta.text = a + '+' + b + " = ?"
 }
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
@@ -246,9 +244,6 @@ function getPosicaoMeteoros(){
 	];
 
 	//adiciona lógica para controlar a posição dos meteoros
-	
-
-
 	return posicoes;
 }
 
@@ -256,7 +251,7 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-//detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
+//detecta quando os meteoros não são atingidos
 function checkGameOver(){
 	if (meteoros.y > 550 && vidas > 0) {
 		vidas--;
