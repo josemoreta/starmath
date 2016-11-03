@@ -137,10 +137,44 @@ function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
 }
 
 function alteraPergunta(){
-	var a = getRandomInt(1, 11);
-	var b = getRandomInt(1, 11);
-	respostaCorreta = a + b;
-	textoPergunta.text = a + '+' + b + " = ?"
+	var op = getRandomInt(1, 4);
+	var a = getRandomInt(1, 9);
+	var b = getRandomInt(1, 9);
+
+	if (op == 1) {
+		respostaCorreta = a + b;
+		textoPergunta.text = a + '+' + b + " = ?"
+	}
+
+	if (op == 2) {
+
+		if (a < b) {
+			temp = a;
+			a = b;
+			b = temp;
+		}
+
+		respostaCorreta = a - b;
+		textoPergunta.text = a + '-' + b + " = ?"
+	}
+
+	if (op == 3) {
+		respostaCorreta = a * b;
+		textoPergunta.text = a + '*' + b + " = ?"
+	}
+
+	if (op == 4) {
+
+		while(a%b != 0) {
+			var a = getRandomInt(1, 9);
+			var b = getRandomInt(1, 9);
+		}
+		respostaCorreta = a / b;
+		textoPergunta.text = a + '/' + b + " = ?"
+	}
+
+	//respostaCorreta = a + b;
+	//textoPergunta.text = a + '+' + b + " = ?"
 }
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
@@ -224,7 +258,7 @@ function getRandomInt(min, max) {
 
 //detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
 function checkGameOver(){
-		if (meteoros.y > 550 && vidas > 0) {
+	if (meteoros.y > 550 && vidas > 0) {
 		vidas--;
 		textoVidas.text = vidas;
 		meteoroErrado1.kill();
