@@ -15,10 +15,18 @@ function carregaRecursos(){
 function criaCenarioEBackground(){
 	cenario = jogo.add.tileSprite(0, 60, 800, 600, 'cenario'); // x, y, width, heigth, key
 	coracao = jogo.add.sprite(jogo.world.centerX - 385, jogo.world.centerY - 295, 'coracao');
-	somTema = jogo.add.audio('somTema');
 	//parametro 0.3 refere-se ao volume, true é para que a musica reproduza em loop
 	somTema.play(null, null, 0.3, true, null);
 	velocidadeScrollCenario = 2;
+}
+
+//Função para evitar que algum audio seja executado antes de ser carregado na variável respectiva.
+function carregaAudios(){
+	somTema = jogo.add.audio('somTema');
+	somTiro = jogo.add.audio('somTiro');
+	somRespostaCerta = jogo.add.audio('somRespostaCerta');
+	somRespostaErrada = jogo.add.audio('somRespostaErrada');
+	somGameOver = jogo.add.audio('somGameOver');
 }
 
 function criaNave(){
@@ -29,8 +37,6 @@ function criaNave(){
 
 function criaTiros(){
 	tiroVelocidade = 0;
-
-	somTiro = jogo.add.audio('somTiro');
 
 	tiro = jogo.add.group();
 	// Faz com que os objetos do grupo tenham um 'corpo' e em seguida seta o sistema de fisica aplicado a esses corpos
@@ -88,7 +94,6 @@ function criaMeteoros(){
 }
 
 function quandoAconteceColisaoCorreta(tiroQueAcertou, meteoro){
-	somRespostaCerta = jogo.add.audio('somRespostaCerta');
 	tiroQueAcertou.kill();
 	meteoro.kill();	
 	meteoroErrado1.kill();
@@ -139,7 +144,6 @@ function alteraPergunta(){
 }
 
 function quandoAconteceColisaoErrada(tiroQueAcertou, meteoro){
-	somRespostaErrada = jogo.add.audio('somRespostaErrada');
 	tiroQueAcertou.kill();
 	meteoroCerto.kill();
 	meteoro.kill();	
@@ -220,8 +224,7 @@ function getRandomInt(min, max) {
 
 //detecta quando os meteoros não são atingidos (precisa alterar para o esquema das vidas)
 function checkGameOver(){
-	somGameOver = jogo.add.audio('somGameOver');
-	if (meteoros.y > 600 && vidas > 0) {
+		if (meteoros.y > 550 && vidas > 0) {
 		vidas--;
 		textoVidas.text = vidas;
 		meteoroErrado1.kill();

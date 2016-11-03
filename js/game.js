@@ -39,6 +39,7 @@ var Game = {
 	},
 
 	create: function(){
+			carregaAudios();
 			criaCenarioEBackground();
 			criaNave();
 			criaTiros();
