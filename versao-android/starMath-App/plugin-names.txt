@@ -1,0 +1,4 @@
+cordova-plugin-crosswalk-webview
+cordova-plugin-splashscreen
+insonmia
+whitelist
