@@ -1,9 +1,9 @@
 var Menu = {
 	preload: function(){
-		jogo.load.image('botaoIniciar', 'recursos/imagens/botao-jogar.png');
+		this.load.image('botaoIniciar', 'recursos/imagens/botao-jogar.png');
 		this.load.image('botaoOptions', 'recursos/imagens/botao-opcoes.png');
 		this.load.image('botaoComoJogar', 'recursos/imagens/botao-como-jogar.png');
-		jogo.load.image('botaoRanking', 'recursos/imagens/botao-ranking.png');
+		this.load.image('botaoRanking', 'recursos/imagens/botao-ranking.png');
 		this.load.image('backgroundTelaInicial', 'recursos/imagens/background-tela-inicial.png');
 	},
 

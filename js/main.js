@@ -1,7 +1,7 @@
 // game object
-jogo.state.add('Menu', Menu);
-jogo.state.add('Game', Game);
-jogo.state.add('Game-over', GameOver);
-jogo.state.add('Opcoes', Opcoes);
+starMath.state.add('Menu', Menu);
+starMath.state.add('Game', Game);
+starMath.state.add('Game-over', GameOver);
+starMath.state.add('Opcoes', Opcoes);
 
-jogo.state.start('Menu');
+starMath.state.start('Menu');

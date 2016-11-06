@@ -41,7 +41,7 @@ var Opcoes = {
 	},
 	
 	voltaProMenu: function(){
-		jogo.state.start('Menu');
+		starMath.state.start('Menu');
 	}
 
 
