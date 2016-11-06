@@ -39,11 +39,11 @@ var GameOver = {
 	},
 
 	jogaNovamente: function(){
-		jogo.state.start('Game');
+		starMath.state.start('Game');
 	},
 
 	voltaProMenu: function(){
-		jogo.state.start('Menu');
+		starMath.state.start('Menu');
 	}
 
 };

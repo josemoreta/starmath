@@ -2,49 +2,13 @@ var inclinaCelular = false;
 var velocidadeMovimentacaoMeteoros = 0.5;
 var setouVelocidade;
 var pontuacao;
-var vidas;
 
 var Game = {
 
-	// Cenario
-	cenario : '',
-	velocidadeScrollCenario : '',
-	// Jogador
-	navinha : '',
-	// Movimentação
-	controles : '',
-	// Tiros
-	botaoAtirar : '',
-	tiro : '',
-	tiroVelocidade : '',
-	// Barulho do Tiro - audio
-	somTiro : '',
-	// Elementos textuais
-	textoPergunta : '',
-	textoPontuacao : '',
 	
-	// Meteoros com a resposta
-	meteoros : '',
-	meteoroCerto : '',
-	meteoroErrado1 : '',
-	meteoroErrado2 : '',
-	respostaCorreta : '',
-	textCorreto: '',
-	textErrado1: '',
-	textErrado2: '',
-	coracao: '',
-	textoVidas: '',
-	botaoEsquerda: '',
-	botaoDireita: '',
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
-
-	somTema : '',
-	somRespostaErrada: '',
-	somRespostaCerta: '',
-	somGameOver: '',
-	posicoes: '',
 
 	preload: function(){
 		this.carregaRecursos();
@@ -148,8 +112,8 @@ var Game = {
 		this.velocidadeScrollCenario = 2;
 		this.somTema.play(null, null, 0.3, true, null);
 
-		vidas = 3;
-		this.textoVidas = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, vidas,{
+		this.vidas = 3;
+		this.textoVidas = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.vidas,{
 			font: '18px Arial',
 			fill: '#ffffff',
 			align: 'center'
@@ -334,8 +298,8 @@ var Game = {
 		this.alteraPergunta();
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
-		vidas--;
-		this.textoVidas.text = vidas;
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
 		this.checkGameOver();
 	},
 
@@ -444,9 +408,9 @@ var Game = {
 
 	checkGameOver: function(){
 		if(inclinaCelular){
-			if (this.meteoros.y > 600 && vidas > 0) {
-				vidas--;
-				this.textoVidas.text = vidas;
+			if (this.meteoros.y > 600 && this.vidas > 0) {
+				this.vidas--;
+				this.textoVidas.text = this.vidas;
 				this.meteoroErrado1.kill();
 				this.meteoroErrado2.kill();
 				this.meteoroCerto.kill();
@@ -455,19 +419,19 @@ var Game = {
 				this.textErrado2.kill();
 				this.somRespostaErrada.play();
 				this.criaMeteoros();
-			} else if(this.meteoros.y > 600 && vidas <= 0) {
+			} else if(this.meteoros.y > 600 && this.vidas <= 0) {
 				this.somTema.stop();
 				this.somGameOver.play(null, null, 0.2, null, null);
 				this.gameOver();
-			} else if(vidas <= 0){
+			} else if(this.vidas <= 0){
 				this.somTema.stop();
 				this.somGameOver.play(null, null, 0.2, null, null);
 				this.gameOver();
 			}			
 		} else {
-			if (this.meteoros.y > 480 && vidas > 0){
-				vidas--;
-				this.textoVidas.text = vidas;
+			if (this.meteoros.y > 480 && this.vidas > 0){
+				this.vidas--;
+				this.textoVidas.text = this.vidas;
 				this.meteoroErrado1.kill();
 				this.meteoroErrado2.kill();
 				this.meteoroCerto.kill();
@@ -476,11 +440,11 @@ var Game = {
 				this.textErrado2.kill();
 				this.somRespostaErrada.play();
 				this.criaMeteoros();
-			}else if(this.meteoros.y > 480 && vidas <= 0) {
+			}else if(this.meteoros.y > 480 && this.vidas <= 0) {
 				this.somTema.stop();
 				this.somGameOver.play(null, null, 0.2, null, null);
 				this.gameOver();
-			} else if(vidas <= 0){
+			} else if(this.vidas <= 0){
 				this.somTema.stop();
 				this.somGameOver.play(null, null, 0.2, null, null);
 				this.gameOver();
@@ -497,7 +461,7 @@ var Game = {
 			velocidadeMovimentacaoMeteoros = 0.5;
 		}
 			
-		jogo.state.start('Game-over');
+		starMath.state.start('Game-over');
 	},
 
 	movimentaMeteoros: function(){
