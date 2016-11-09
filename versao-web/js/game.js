@@ -200,6 +200,27 @@ var Game = {
 
 	},
 
+	quandoAconteceColisaoErrada : function (tiroQueAcertou, meteoro){
+		tiroQueAcertou.kill();
+		this.meteoroCerto.kill();
+		meteoro.kill();	
+		this.meteoroErrado1.kill();
+		this.meteoroErrado2.kill();
+		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+		this.alteraPergunta();
+		this.criaMeteoros();
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+		this.somRespostaErrada.play();
+		this.checkGameOver();
+		//jogo.state.start('Game-over');
+
+	},
+
+
 	alteraPergunta : function (){
 		var op = this.getRandomInt(1, 4);
 		var a = this.getRandomInt(1, 9);
@@ -235,26 +256,7 @@ var Game = {
 
 	},
 
-	quandoAconteceColisaoErrada : function (tiroQueAcertou, meteoro){
-		tiroQueAcertou.kill();
-		this.meteoroCerto.kill();
-		meteoro.kill();	
-		this.meteoroErrado1.kill();
-		this.meteoroErrado2.kill();
-		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
-		this.alteraPergunta();
-		this.criaMeteoros();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
-		this.somRespostaErrada.play();
-		this.checkGameOver();
-		//jogo.state.start('Game-over');
-
-	},
-
+	
 	atualizoes : function (){
 
 		this.cenario.tilePosition.y += this.velocidadeScrollCenario;

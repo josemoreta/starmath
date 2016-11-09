@@ -12,7 +12,6 @@ var GameOver = {
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'botaoIniciar', this.jogaNovamente, this);
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 50, 'botaoMenu', this.voltaProMenu, this);
 		this.add.button(this.world.centerX - (245/2), this.world.centerY + 10, 'botaoRanking', this.salvaPontuacao, this);
-
 		
 		this.add.text(this.world.centerX - 95, this.world.centerY - 250, 'Game-over!!', {
 			font: "34px Arial",
