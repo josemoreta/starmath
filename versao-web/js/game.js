@@ -1,6 +1,7 @@
 var pontuacao;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var setouVelocidade;
+var INCREMENTO_DE_VELOCIDADE = 0.05;
 
 var Game = {
 
@@ -176,15 +177,8 @@ var Game = {
 		this.textoPontuacao.text = pontuacao;
 		this.somRespostaCerta.play();
 		this.alteraPergunta();
+		this.incrementaVelocidade();
 		this.criaMeteoros();
-		
-		/*Implementar lógica de atualização progressiva da dificuldade*/
-		if(pontuacao > 40){
-			velocidadeMovimentacaoMeteoros = 1;
-		}
-		if(pontuacao > 100){
-			velocidadeMovimentacaoMeteoros = 2;
-		}
 
 		// O código abaixo faz com que o grupo de tiros seja destruido e em seguida criado novamente, 
 		//para evitar de acertar meteoros errados
@@ -312,15 +306,15 @@ var Game = {
 		this.posicoes.sort(function(a,b){
 			return a-b;
 		});
-		console.log('ordenando: '+ this.posicoes);
+		//console.log('ordenando: '+ this.posicoes);
 		if(this.posicoes[1] - this.posicoes[0] <= 50){
 			this.posicoes[1] += 50;
-			console.log('primeiro if ' + this.posicoes);
+			//console.log('primeiro if ' + this.posicoes);
 		}
 
 		if(this.posicoes[2] - this.posicoes[1] <= 50){
 			this.posicoes[2] += 100;	
-			console.log('segundo if ' + this.posicoes);	
+			//console.log('segundo if ' + this.posicoes);	
 		}
 		this.shuffle();
 		
@@ -373,8 +367,13 @@ var Game = {
 
 	movimentaMeteoros : function (){
 		this.meteoros.y += velocidadeMovimentacaoMeteoros;
-		this.textCorreto.y +=  velocidadeMovimentacaoMeteoros;
+		this.textCorreto.y += velocidadeMovimentacaoMeteoros;
 		this.textErrado1.y += velocidadeMovimentacaoMeteoros;
 		this.textErrado2.y += velocidadeMovimentacaoMeteoros;
+	},
+
+	incrementaVelocidade : function(){
+		velocidadeMovimentacaoMeteoros += INCREMENTO_DE_VELOCIDADE;
+		console.log(velocidadeMovimentacaoMeteoros);
 	}
 };
