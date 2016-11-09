@@ -222,7 +222,7 @@ var Game = {
 			this.textoPergunta.text = a + '-' + b + " = ?"
 		} else 	if (op == 3) { //multiplicação
 			this.respostaCorreta = a * b;
-			this.textoPergunta.text = a + '*' + b + " = ?"
+			this.textoPergunta.text = a + 'x' + b + " = ?"
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
@@ -230,7 +230,7 @@ var Game = {
 				var b = this.getRandomInt(1, 9);
 			}
 			this.respostaCorreta = a / b;
-			this.textoPergunta.text = a + '/' + b + " = ?"
+			this.textoPergunta.text = a + '÷' + b + " = ?"
 		}
 
 	},
@@ -291,7 +291,6 @@ var Game = {
 				this.umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
 				// De quanto em quanto tempo sai uma bala
 				this.tiroVelocidade = this.time.now + 200;
-				
 			}
 		}
 	},
