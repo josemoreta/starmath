@@ -116,6 +116,7 @@ var Game = {
 	},
 
 	criaTiros : function (){
+
 		this.tiroVelocidade = 0;
 
 		this.tiro = this.add.group();
@@ -316,20 +317,21 @@ var Game = {
 	},
 
 	atira : function (){
-		
-		this.umTiro = this.tiro.getFirstExists(false);
-		this.somTiro.play();
+		if(!this.colidiu) {
+			this.umTiro = this.tiro.getFirstExists(false);
+			this.somTiro.play();
 
-		if(this.time.now > this.tiroVelocidade){
+			if(this.time.now > this.tiroVelocidade){
 			//console.log('entrou no primeiro if');
 			if(this.umTiro){
 				
-				//console.log('entrou no segundo if')
-				this.umTiro.reset(this.navinha.x,this.navinha.y);
-				// Quão rápido sobe a bala
-				this.umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
-				// De quanto em quanto tempo sai uma bala
-				this.tiroVelocidade = this.time.now + 200;
+					//console.log('entrou no segundo if')
+					this.umTiro.reset(this.navinha.x,this.navinha.y);
+					// Quão rápido sobe a bala
+					this.umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
+					// De quanto em quanto tempo sai uma bala
+					this.tiroVelocidade = this.time.now + 200;
+				}
 			}
 		}
 	},
