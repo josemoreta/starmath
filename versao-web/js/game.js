@@ -2,6 +2,7 @@ var pontuacao;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var setouVelocidade;
 var INCREMENTO_DE_VELOCIDADE = 0.05;
+var nivel;
 
 var Game = {
 
@@ -10,16 +11,16 @@ var Game = {
 	},
 
 	create: function(){
-			this.carregaAudios();
-			this.criaCenarioEBackground();
-			this.criaNave();
-			this.criaTiros();
-			
+		this.carregaAudios();
+		this.criaCenarioEBackground();
+		this.criaNave();
+		this.criaTiros();
+
 			//Texto
 			this.textoPergunta = this.add.text(this.world.centerX - 100, this.world.centerY - 300, '', {
 				font: "65px Arial",
-		        fill: "#ff0044",
-		        align: "center"
+				fill: "#ff0044",
+				align: "center"
 			});
 			this.alteraPergunta();
 
@@ -48,12 +49,12 @@ var Game = {
 			this.meteoros.enableBody = true;
 			this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
 			this.criaMeteoros();
-	},
+		},
 
-	update: function(){
-		this.atualizoes();
+		update: function(){
+			this.atualizoes();
 
-		this.movimentaMeteoros();		
+			this.movimentaMeteoros();		
 
 		// Identificando colisão para cada um dos meteoros
 		// objetos que recebem colisao, funcao, 
@@ -66,7 +67,7 @@ var Game = {
 
 
 	carregaRecursos : function (){
-	
+
 		this.load.audio('somTiro', ['recursos/audio/somTiro.mp3', 'recursos/audio/somTiro.ogg']);
 		this.load.audio('somRespostaCerta', ['recursos/audio/somRespostaCerta.mp3', 'recursos/audio/somRespostaCerta.ogg']);
 		this.load.audio('somRespostaErrada', ['recursos/audio/somRespostaErrada.mp3', 'recursos/audio/somRespostaErrada.ogg']);
@@ -86,7 +87,7 @@ var Game = {
 		this.cenario = this.add.tileSprite(0, 60, 800, 600, 'cenario'); // x, y, width, heigth, key
 		this.coracao = this.add.sprite(this.world.centerX - 385, this.world.centerY - 295, 'coracao');
 		//parametro 0.3 refere-se ao volume, true é para que a musica reproduza em loop
-		this.somTema.play(null, null, 0.3, true, null);
+		this.somTema.play(null, null, 0.5, true, null);
 		this.velocidadeScrollCenario = 2;
 	},
 
@@ -222,14 +223,28 @@ var Game = {
 
 
 	alteraPergunta : function (){
-		var op = this.getRandomInt(1, 4);
-		var a = this.getRandomInt(1, 9);
-		var b = this.getRandomInt(1, 9);
+		
+		if(nivel == 1) {
+			var op = 1;
+
+		} else if(nivel == 2) {
+			var op = this.getRandomInt(1, 2);
+		
+		} else if(nivel == 3) {
+			var op = this.getRandomInt(1, 3);
+
+		} else {
+			var op = this.getRandomInt(1, 4);
+		}
+		
+		var a = this.getRandomInt(0, 10);
+		var b = this.getRandomInt(0, 10);
 
 
 		if (op == 1) { //soma
 			this.respostaCorreta = a + b;
 			this.textoPergunta.text = a + '+' + b + " = ?"
+
 		} else if (op == 2) { //subtração
 
 			//Evita respostas das operações com negativos
@@ -241,14 +256,20 @@ var Game = {
 
 			this.respostaCorreta = a - b;
 			this.textoPergunta.text = a + '-' + b + " = ?"
+
 		} else 	if (op == 3) { //multiplicação
 			this.respostaCorreta = a * b;
 			this.textoPergunta.text = a + 'x' + b + " = ?"
+
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				var a = this.getRandomInt(1, 9);
-				var b = this.getRandomInt(1, 9);
+				var a = this.getRandomInt(0, 10);
+				var b = this.getRandomInt(0, 10);
+				//console.log( a+"/"+b);
+			}
+			if(b == 0) { //evita divisão por 0;
+				b++;
 			}
 			this.respostaCorreta = a / b;
 			this.textoPergunta.text = a + '÷' + b + " = ?"
@@ -299,9 +320,9 @@ var Game = {
 
 	getPosicaoMeteoros : function (){
 		this.posicoes = [
-			this.getRandomInt(10, 670),	
-		 	this.getRandomInt(10, 670),
-		 	this.getRandomInt(10, 670)
+		this.getRandomInt(10, 670),	
+		this.getRandomInt(10, 670),
+		this.getRandomInt(10, 670)
 		];
 
 		this.posicoes.sort(function(a,b){
@@ -322,13 +343,13 @@ var Game = {
 	},
 	// mistura o array posicoes
 	shuffle : function () {
-	    var j, x, i;
-	    for (i = this.posicoes.length; i; i--) {
-	        j = Math.floor(Math.random() * i);
-	        x = this.posicoes[i - 1];
-	        this.posicoes[i - 1] = this.posicoes[j];
-	        this.posicoes[j] = x;
-	    }
+		var j, x, i;
+		for (i = this.posicoes.length; i; i--) {
+			j = Math.floor(Math.random() * i);
+			x = this.posicoes[i - 1];
+			this.posicoes[i - 1] = this.posicoes[j];
+			this.posicoes[j] = x;
+		}
 	},
 
 

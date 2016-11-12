@@ -1,6 +1,5 @@
 var Opcoes = {
 	
-
 	preload: function(){
 		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');
 		this.load.image('botaoDiminui', 'recursos/imagens/esquerda.png');
