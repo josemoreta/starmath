@@ -2,6 +2,7 @@ var inclinaCelular = false;
 var velocidadeMovimentacaoMeteoros = 0.5;
 var setouVelocidade;
 var pontuacao;
+var INCREMENTO_DE_VELOCIDADE = 0.05;
 
 var Game = {
 
@@ -234,15 +235,10 @@ var Game = {
 		this.somRespostaCerta.play();
 
 		this.alteraPergunta();
+		this.incrementaVelocidade();
 		this.criaMeteoros();
 
-		if(pontuacao > 200){
-			velocidadeMovimentacaoMeteoros = 1.2;
-		} else 	if(pontuacao > 120){
-			velocidadeMovimentacaoMeteoros = 1;
-		} else if(pontuacao > 60){
-			velocidadeMovimentacaoMeteoros = 0.8;
-		}
+
 	},
 
 
@@ -268,7 +264,7 @@ var Game = {
 			this.textoPergunta.text = a + '-' + b + " = ?"
 		} else 	if (op == 3) { //multiplicação
 			this.respostaCorreta = a * b;
-			this.textoPergunta.text = a + '*' + b + " = ?"
+			this.textoPergunta.text = a + 'x' + b + " = ?"
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
@@ -276,7 +272,7 @@ var Game = {
 				var b = this.getRandomInt(1, 9);
 			}
 			this.respostaCorreta = a / b;
-			this.textoPergunta.text = a + '/' + b + " = ?"
+			this.textoPergunta.text = a + '÷' + b + " = ?"
 		}
 	},
 
@@ -469,5 +465,10 @@ var Game = {
 		this.textCorreto.y +=  velocidadeMovimentacaoMeteoros;
 		this.textErrado1.y += velocidadeMovimentacaoMeteoros;
 		this.textErrado2.y += velocidadeMovimentacaoMeteoros;
+	},
+
+	incrementaVelocidade: function(){
+		velocidadeMovimentacaoMeteoros += INCREMENTO_DE_VELOCIDADE;
+		console.log(velocidadeMovimentacaoMeteoros);
 	}
 };
