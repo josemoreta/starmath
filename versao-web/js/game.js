@@ -1,8 +1,9 @@
 var pontuacao;
 var velocidadeMovimentacaoMeteoros  = 0.5;
 var setouVelocidade;
-var INCREMENTO_DE_VELOCIDADE = 0.05;
+var INCREMENTO_DE_VELOCIDADE = 0.04;
 var nivel;
+var max = 10;
 
 var Game = {
 
@@ -174,9 +175,10 @@ var Game = {
 		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();
-		pontuacao += 20;
+		pontuacao += 10;
 		this.textoPontuacao.text = pontuacao;
 		this.somRespostaCerta.play();
+		this.aumentaRangeOperacoes(pontuacao);
 		this.alteraPergunta();
 		this.incrementaVelocidade();
 		this.criaMeteoros();
@@ -237,8 +239,8 @@ var Game = {
 			var op = this.getRandomInt(1, 4);
 		}
 		
-		var a = this.getRandomInt(0, 10);
-		var b = this.getRandomInt(0, 10);
+		var a = this.getRandomInt(0, max);
+		var b = this.getRandomInt(0, max);
 
 
 		if (op == 1) { //soma
@@ -264,8 +266,8 @@ var Game = {
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				var a = this.getRandomInt(0, 10);
-				var b = this.getRandomInt(0, 10);
+				var a = this.getRandomInt(0, max);
+				var b = this.getRandomInt(0, max);
 				//console.log( a+"/"+b);
 			}
 			if(b == 0) { //evita divisão por 0;
@@ -372,10 +374,12 @@ var Game = {
 			this.somTema.stop();
 			this.somGameOver.play(null, null, 0.2, null, null);
 			this.gameOver();
+			max = 10; //seta o valor maximo da range novamente.
 		} else if(this.vidas <= 0){
 			this.somTema.stop();
 			this.somGameOver.play(null, null, 0.2, null, null);
 			this.gameOver();
+			max = 10; //seta o valor maximo da range novamente.
 		}
 	},
 
@@ -397,5 +401,13 @@ var Game = {
 	incrementaVelocidade : function(){
 		velocidadeMovimentacaoMeteoros += INCREMENTO_DE_VELOCIDADE;
 		console.log(velocidadeMovimentacaoMeteoros);
+	},
+
+	aumentaRangeOperacoes : function(pontuacao) {
+		if (pontuacao%100 == 0) { //aumenta a range a cada 100 pontos
+			max += 1;
+			console.log("range aumentada");
+			console.log("valor maximo = " + max);
+		}
 	}
 };
