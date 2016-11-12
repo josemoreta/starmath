@@ -1,5 +1,5 @@
 var pontuacao;
-var velocidadeMovimentacaoMeteoros  = 0.5;
+var velocidadeMovimentacaoMeteoros = 0.5;
 var INCREMENTO_DE_VELOCIDADE = 0.04;
 var nivel;
 var max = 10;

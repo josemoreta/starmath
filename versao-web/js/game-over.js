@@ -39,10 +39,12 @@ var GameOver = {
 
 	jogaNovamente: function(){
 		starMath.state.start('Game');
+		velocidadeMovimentacaoMeteoros = 0.5;
 	},
 
 	voltaProMenu: function(){
 		starMath.state.start('Menu');
+		velocidadeMovimentacaoMeteoros = 0.5;
 	}
 
 };
