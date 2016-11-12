@@ -2,11 +2,11 @@ var inclinaCelular = false;
 var velocidadeMovimentacaoMeteoros = 0.5;
 var setouVelocidade;
 var pontuacao;
-var INCREMENTO_DE_VELOCIDADE = 0.05;
 
 var Game = {
 
-	
+	INCREMENTO_DE_VELOCIDADE : 0.04,
+	maxRangeOperacao: 9, 
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
@@ -229,11 +229,11 @@ var Game = {
 		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();
-		pontuacao += 20;
+		pontuacao += 10;
 		this.textoPontuacao.text = pontuacao;
 
 		this.somRespostaCerta.play();
-
+		this.aumentaRangeOperacoes();
 		this.alteraPergunta();
 		this.incrementaVelocidade();
 		this.criaMeteoros();
@@ -244,8 +244,8 @@ var Game = {
 
 	alteraPergunta: function (){
 		var op = this.getRandomInt(1, 4);
-		var a = this.getRandomInt(1, 9);
-		var b = this.getRandomInt(1, 9);
+		var a = this.getRandomInt(1, this.maxRangeOperacao);
+		var b = this.getRandomInt(1, this.maxRangeOperacao);
 
 
 		if (op == 1) { //soma
@@ -268,8 +268,8 @@ var Game = {
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				var a = this.getRandomInt(1, 9);
-				var b = this.getRandomInt(1, 9);
+				var a = this.getRandomInt(1, this.maxRangeOperacao);
+				var b = this.getRandomInt(1, this.maxRangeOperacao);
 			}
 			this.respostaCorreta = a / b;
 			this.textoPergunta.text = a + '÷' + b + " = ?"
@@ -417,7 +417,7 @@ var Game = {
 				this.criaMeteoros();
 			} else if(this.meteoros.y > 600 && this.vidas <= 0) {
 				this.somTema.stop();
-				this.somGameOver.play(null, null, 0.2, null, null);
+				this.somGameOver.play(null, null, 0.2, null, null);				
 				this.gameOver();
 			} else if(this.vidas <= 0){
 				this.somTema.stop();
@@ -468,7 +468,15 @@ var Game = {
 	},
 
 	incrementaVelocidade: function(){
-		velocidadeMovimentacaoMeteoros += INCREMENTO_DE_VELOCIDADE;
+		velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
 		console.log(velocidadeMovimentacaoMeteoros);
-	}
+	},
+
+	aumentaRangeOperacoes : function() {
+		if (pontuacao%100 == 0) { //aumenta a range a cada 100 pontos
+			this.maxRangeOperacao += 1;
+			console.log("range aumentada");
+			console.log("valor maximo = " + this.maxRangeOperacao);
+		}
+  	}
 };
