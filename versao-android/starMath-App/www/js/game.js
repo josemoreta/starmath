@@ -454,10 +454,10 @@ var Game = {
 			window.removeEventListener('deviceorientation', this.chamaHandlerOrientation, true);			
 		}
 		
-		if(!setouVelocidade){
-			velocidadeMovimentacaoMeteoros = 0.5;
-		}
+		
+		
 			
+		velocidadeMovimentacaoMeteoros = 0.5;
 		starMath.state.start('Game-over');
 	},
 
