@@ -20,7 +20,7 @@ var Menu = {
 	},
 
 	startGame: function(){
-		this.state.start('Game');
+		this.state.start('Niveis');
 	},
 
 	startOptions: function(){

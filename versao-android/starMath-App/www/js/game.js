@@ -2,6 +2,7 @@ var inclinaCelular = false;
 var velocidadeMovimentacaoMeteoros = 0.5;
 var setouVelocidade;
 var pontuacao;
+var nivel;
 
 var Game = {
 
@@ -111,7 +112,7 @@ var Game = {
 
 		this.coracao = this.add.sprite(this.world.centerX + 25, this.world.centerY - this.world.centerY, 'coracao');
 		this.velocidadeScrollCenario = 2;
-		this.somTema.play(null, null, 0.3, true, null);
+		this.somTema.play(null, null, 0.5, true, null);
 
 		this.vidas = 3;
 		this.textoVidas = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.vidas,{
@@ -243,7 +244,7 @@ var Game = {
 
 
 	alteraPergunta: function (){
-		var op = this.getRandomInt(1, 4);
+		var op = this.getRandomInt(1, nivel);
 		var a = this.getRandomInt(1, this.maxRangeOperacao);
 		var b = this.getRandomInt(1, this.maxRangeOperacao);
 
@@ -255,7 +256,7 @@ var Game = {
 
 			//Evita respostas das operações com negativos
 			if (a < b) {
-				temp = a;
+				var temp = a;
 				a = b;
 				b = temp;
 			}
@@ -268,8 +269,8 @@ var Game = {
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				var a = this.getRandomInt(1, this.maxRangeOperacao);
-				var b = this.getRandomInt(1, this.maxRangeOperacao);
+				a = this.getRandomInt(1, this.maxRangeOperacao);
+				b = this.getRandomInt(1, this.maxRangeOperacao);
 			}
 			this.respostaCorreta = a / b;
 			this.textoPergunta.text = a + '÷' + b + " = ?"
