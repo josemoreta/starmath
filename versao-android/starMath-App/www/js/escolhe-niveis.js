@@ -14,7 +14,7 @@ var EscolheNiveis = {
 		this.add.button(this.world.centerX - 140, this.world.centerY - 50, 'imgNivel1', this.nivelAdicao, this);
 		this.add.button(this.world.centerX, this.world.centerY - 50, 'imgNivel2', this.nivelSubtracao, this);
 		this.add.button(this.world.centerX - 140, this.world.centerY + 20, 'imgNivel3', this.nivelMultiplicacao, this);
-		this.add.button(this.world.centerX, this.world.centerY + 20, 'imgNivel4', this.nivelDivicao, this);
+		this.add.button(this.world.centerX, this.world.centerY + 20, 'imgNivel4', this.nivelDivisao, this);
 		
 		this.add.text(this.world.centerX - 100, this.world.centerY - 100, 'Escolha seu nível!', {
 			font: "25px Arial",
@@ -29,25 +29,21 @@ var EscolheNiveis = {
 
 	nivelAdicao : function() {
 		nivel = 1;
-		console.log("nivel: " + nivel)
 		this.state.start('Game');
 	},
 
 	nivelSubtracao : function() {
 		nivel = 2;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
 	},
 
 	nivelMultiplicacao : function() {
 		nivel = 3;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
 	},
 
-	nivelDivicao : function() {
+	nivelDivisao : function() {
 		nivel = 4;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
 	},
 
