@@ -1,6 +1,5 @@
 var inclinaCelular = false;
 var velocidadeMovimentacaoMeteoros = 0.5;
-var setouVelocidade;
 var pontuacao;
 var nivel;
 
@@ -24,6 +23,7 @@ var Game = {
  			this.somRespostaCerta = this.add.audio('somRespostaCerta');
 			this.somRespostaErrada = this.add.audio('somRespostaErrada');
  			this.somGameOver = this.add.audio('somGameOver');
+ 			this.somExplosao = this.add.audio('somExplosao');
 
 			this.criaCenarioBackground();
 			this.criaNave();
@@ -79,6 +79,10 @@ var Game = {
 		this.physics.arcade.overlap(this.tiro, this.meteoroErrado1, this.quandoAconteceColisaoErrada, null, this);
 		this.physics.arcade.overlap(this.tiro, this.meteoroErrado2, this.quandoAconteceColisaoErrada, null, this);
 
+		this.physics.arcade.overlap(this.navinha, this.meteoroCerto, this.colisaoNaveMeteoroCerto, null, this);
+		this.physics.arcade.overlap(this.navinha, this.meteoroErrado1, this.colisaoNaveMeteoroErrado1, null, this);
+		this.physics.arcade.overlap(this.navinha, this.meteoroErrado2, this.colisaoNaveMeteoroErrado2, null, this);
+
 		this.checkGameOver();
 
 	},
@@ -98,6 +102,8 @@ var Game = {
 		this.load.audio('somRespostaErrada',  'recursos/audio/somRespostaErrada.ogg');
  		this.load.audio('somGameOver',  'recursos/audio/somGameOver.ogg');
  		this.load.audio('somTema',  'recursos/audio/somTema.ogg');
+
+ 		this.load.audio('somExplosao', 'recursos/audio/somExplosao.ogg');
 	},
 
 
@@ -452,10 +458,7 @@ var Game = {
 	gameOver: function(){
 		if (inclinaCelular){
 			window.removeEventListener('deviceorientation', this.chamaHandlerOrientation, true);			
-		}
-		
-		
-		
+		}		
 			
 		velocidadeMovimentacaoMeteoros = 0.5;
 		starMath.state.start('Game-over');
@@ -479,5 +482,63 @@ var Game = {
 			console.log("range aumentada");
 			console.log("valor maximo = " + this.maxRangeOperacao);
 		}
+  	},
+
+  	criaExplosao : function(){
+ 		this.somExplosao.play(); 		
+ 	},
+
+ 	colisaoNaveMeteoroCerto : function(navinha, meteoro){
+ 		meteoro.kill();	
+ 		this.meteoroErrado1.kill();
+ 		this.meteoroErrado2.kill();
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+
+ 		this.criaExplosao(); 		
+		
+		this.alteraPergunta();
+		this.criaMeteoros();
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+		this.checkGameOver();	
+
+  	},
+  	 	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
+ 		meteoro.kill();	
+ 		this.meteoroCerto.kill()
+ 		this.meteoroErrado2.kill();
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+
+ 		this.criaExplosao(); 		
+		
+		this.alteraPergunta();
+		this.criaMeteoros();
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+		this.checkGameOver();	
+  	}, 
+  		colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
+ 		meteoro.kill();	
+ 		this.meteoroCerto.kill();
+ 		this.meteoroErrado1.kill();
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+ 		
+ 		this.criaExplosao(); 	
+
+
+		this.alteraPergunta();
+		this.criaMeteoros();
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+		this.checkGameOver();	
   	}
 };
