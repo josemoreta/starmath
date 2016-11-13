@@ -94,6 +94,8 @@ var Game = {
 		this.load.audio('somTiro',  'recursos/audio/somTiro.ogg');
 		this.load.image('meteoro', 'recursos/imagens/meteoro.png');
 		this.load.image('coracao', 'recursos/imagens/coracao.png');
+		this.load.image('explosao', 'recursos/imagens/explosao.png');
+
 		this.load.image('botaoEsquerda', 'recursos/imagens/esquerda.png');
 		this.load.image('botaoDireita', 'recursos/imagens/direita.png');
 		this.load.image('botaoAtira', 'recursos/imagens/atira.png');
@@ -226,6 +228,8 @@ var Game = {
 	    	wordWrapWidth: this.meteoroErrado2.width,
 	    	align: "center" });
 		this.textErrado2.anchor.set(0.5, 0.5);
+
+
 	},
 
 	quandoAconteceColisaoCorreta: function (tiroQueAcertou, meteoro){
@@ -484,20 +488,25 @@ var Game = {
 		}
   	},
 
-  	criaExplosao : function(){
- 		this.somExplosao.play(); 		
+  	criaExplosao : function(meteoro){
+ 		this.somExplosao.play();
+ 		this.explosaoImg =  this.add.sprite(this.navinha.x, this.navinha.y, 'explosao');
+ 		
+ 		this.time.events.add(400, function(){
+ 			this.explosaoImg.kill(); 			
+ 		}, this);
+
  	},
 
  	colisaoNaveMeteoroCerto : function(navinha, meteoro){
+ 		this.criaExplosao();
+ 		
  		meteoro.kill();	
  		this.meteoroErrado1.kill();
  		this.meteoroErrado2.kill();
  		this.textCorreto.kill();
 		this.textErrado1.kill();
-		this.textErrado2.kill();
-
- 		this.criaExplosao(); 		
-		
+		this.textErrado2.kill();		
 		this.alteraPergunta();
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
@@ -507,15 +516,13 @@ var Game = {
 
   	},
   	 	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
+ 		this.criaExplosao(); 		
  		meteoro.kill();	
  		this.meteoroCerto.kill()
  		this.meteoroErrado2.kill();
  		this.textCorreto.kill();
 		this.textErrado1.kill();
-		this.textErrado2.kill();
-
- 		this.criaExplosao(); 		
-		
+		this.textErrado2.kill();		
 		this.alteraPergunta();
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
@@ -524,6 +531,7 @@ var Game = {
 		this.checkGameOver();	
   	}, 
   		colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
+ 		this.criaExplosao(); 	
  		meteoro.kill();	
  		this.meteoroCerto.kill();
  		this.meteoroErrado1.kill();
@@ -531,7 +539,6 @@ var Game = {
 		this.textErrado1.kill();
 		this.textErrado2.kill();
  		
- 		this.criaExplosao(); 	
 
 
 		this.alteraPergunta();
