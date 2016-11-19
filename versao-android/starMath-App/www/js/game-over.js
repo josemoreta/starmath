@@ -17,19 +17,19 @@ var GameOver = {
 		
 		this.add.text(this.world.centerX - 95, this.world.centerY - 250, 'Game-over!!', {
 			font: "34px Arial",
-		    fill: "#ff0044",
+		    fill: "#ffffff",
 		    align: "center"
 		});
 
 		this.add.text(this.world.centerX - 50, this.world.centerY + 150, 'Uau!!', {
 		 		font: "34px Arial",
-		         fill: "#ff0044",
+		         fill: "#ffffff",
 		         align: "center"
 		});
 		
 		this.add.text(this.world.centerX - 80, this.world.centerY + 190, pontuacao + ' pontos', {
 		 		font: "34px Arial",
-		         fill: "#ff0044",
+		         fill: "#ffffff",
 		        align: "center"
 		});
 	},

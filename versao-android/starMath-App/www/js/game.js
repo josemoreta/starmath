@@ -1,12 +1,13 @@
 var inclinaCelular = false;
-var velocidadeMovimentacaoMeteoros = 0.5;
 var pontuacao;
 var nivel;
 
+
 var Game = {
 
+	
+	PONTUACAO_VITORIA: 100,
 	INCREMENTO_DE_VELOCIDADE : 0.04,
-	maxRangeOperacao: 9, 
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
@@ -25,6 +26,9 @@ var Game = {
  			this.somGameOver = this.add.audio('somGameOver');
  			this.somExplosao = this.add.audio('somExplosao');
 
+			this.maxRangeOperacao = 3;
+			this.velocidadeMovimentacaoMeteoros = 0.5;
+
 			this.criaCenarioBackground();
 			this.criaNave();
 			this.criaTiros();
@@ -41,7 +45,7 @@ var Game = {
 			//Texto
 			this.textoPergunta = this.add.text(this.world.centerX - 175, this.world.centerY - 300, '', {
 				font: "40px Arial",
-		        fill: "#ff0044",
+		        fill: "#ffffff",
 		        align: "left"
 			});
 			this.alteraPergunta();
@@ -49,7 +53,7 @@ var Game = {
 			pontuacao = 0;
 			this.textoPontuacao = this.add.text(this.world.centerX + 100, this.world.centerY - 300, pontuacao,{
 				font: '35px Arial',
-				fill: '#ff0044',
+				fill: '#ffffff',
 				align: 'center'
 			});
 
@@ -58,6 +62,7 @@ var Game = {
 			this.meteoros.enableBody = true;
 			this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
 			this.criaMeteoros();
+
 	},
 
 	update: function(){
@@ -84,6 +89,8 @@ var Game = {
 		this.physics.arcade.overlap(this.navinha, this.meteoroErrado2, this.colisaoNaveMeteoroErrado2, null, this);
 
 		this.checkGameOver();
+		console.log('Nivel: ' + nivel);
+		console.log('Max Range: '+ this.maxRangeOperacao);
 
 	},
 
@@ -249,6 +256,11 @@ var Game = {
 		this.incrementaVelocidade();
 		this.criaMeteoros();
 
+		if (pontuacao >= this.PONTUACAO_VITORIA){
+			this.somTema.stop();
+			starMath.state.start('Vitoria');
+		}
+
 
 	},
 
@@ -274,13 +286,15 @@ var Game = {
 			this.respostaCorreta = a - b;
 			this.textoPergunta.text = a + '-' + b + " = ?"
 		} else 	if (op == 3) { //multiplicação
+			a = this.getRandomInt(1, 10);
+			b = this.getRandomInt(1, 10);
 			this.respostaCorreta = a * b;
 			this.textoPergunta.text = a + 'x' + b + " = ?"
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				a = this.getRandomInt(1, this.maxRangeOperacao);
-				b = this.getRandomInt(1, this.maxRangeOperacao);
+				a = this.getRandomInt(1, 10);
+				b = this.getRandomInt(1, 10);
 			}
 			this.respostaCorreta = a / b;
 			this.textoPergunta.text = a + '÷' + b + " = ?"
@@ -306,6 +320,10 @@ var Game = {
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
 		this.textoVidas.text = this.vidas;
 		this.checkGameOver();
 	},
@@ -418,6 +436,10 @@ var Game = {
 			if (this.meteoros.y > 600 && this.vidas > 0) {
 				this.vidas--;
 				this.textoVidas.text = this.vidas;
+				if (pontuacao >= 10){
+					pontuacao -= 10;
+					this.textoPontuacao.text = pontuacao;
+				}
 				this.meteoroErrado1.kill();
 				this.meteoroErrado2.kill();
 				this.meteoroCerto.kill();
@@ -426,19 +448,19 @@ var Game = {
 				this.textErrado2.kill();
 				this.somRespostaErrada.play();
 				this.criaMeteoros();
-			} else if(this.meteoros.y > 600 && this.vidas <= 0) {
-				this.somTema.stop();
-				this.somGameOver.play(null, null, 0.2, null, null);				
+			} else if(this.meteoros.y > 600 && this.vidas <= 0) {					
 				this.gameOver();
-			} else if(this.vidas <= 0){
-				this.somTema.stop();
-				this.somGameOver.play(null, null, 0.2, null, null);
+			} else if(this.vidas <= 0){				
 				this.gameOver();
 			}			
 		} else {
 			if (this.meteoros.y > 480 && this.vidas > 0){
 				this.vidas--;
 				this.textoVidas.text = this.vidas;
+				if (pontuacao >= 10){
+					pontuacao -= 10;
+					this.textoPontuacao.text = pontuacao;
+				}
 				this.meteoroErrado1.kill();
 				this.meteoroErrado2.kill();
 				this.meteoroCerto.kill();
@@ -447,45 +469,41 @@ var Game = {
 				this.textErrado2.kill();
 				this.somRespostaErrada.play();
 				this.criaMeteoros();
-			}else if(this.meteoros.y > 480 && this.vidas <= 0) {
-				this.somTema.stop();
-				this.somGameOver.play(null, null, 0.2, null, null);
+			}else if(this.meteoros.y > 480 && this.vidas <= 0) {				
 				this.gameOver();
-			} else if(this.vidas <= 0){
-				this.somTema.stop();
-				this.somGameOver.play(null, null, 0.2, null, null);
+			} else if(this.vidas <= 0){				
 				this.gameOver();
 			}	
 		}
 	},
 
 	gameOver: function(){
+
+		this.somTema.stop();
+		this.somGameOver.play(null, null, 0.2, null, null);
+
 		if (inclinaCelular){
 			window.removeEventListener('deviceorientation', this.chamaHandlerOrientation, true);			
 		}		
 			
-		velocidadeMovimentacaoMeteoros = 0.5;
+		this.velocidadeMovimentacaoMeteoros = 0.5;
 		starMath.state.start('Game-over');
 	},
 
 	movimentaMeteoros: function(){
-		this.meteoros.y += velocidadeMovimentacaoMeteoros;			
-		this.textCorreto.y +=  velocidadeMovimentacaoMeteoros;
-		this.textErrado1.y += velocidadeMovimentacaoMeteoros;
-		this.textErrado2.y += velocidadeMovimentacaoMeteoros;
+		this.meteoros.y += this.velocidadeMovimentacaoMeteoros;			
+		this.textCorreto.y +=  this.velocidadeMovimentacaoMeteoros;
+		this.textErrado1.y += this.velocidadeMovimentacaoMeteoros;
+		this.textErrado2.y += this.velocidadeMovimentacaoMeteoros;
 	},
 
 	incrementaVelocidade: function(){
-		velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
-		console.log(velocidadeMovimentacaoMeteoros);
+		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
+		console.log(this.velocidadeMovimentacaoMeteoros);
 	},
 
 	aumentaRangeOperacoes : function() {
-		if (pontuacao%100 == 0) { //aumenta a range a cada 100 pontos
-			this.maxRangeOperacao += 1;
-			console.log("range aumentada");
-			console.log("valor maximo = " + this.maxRangeOperacao);
-		}
+		this.maxRangeOperacao += 1;		
   	},
 
   	criaExplosao : function(meteoro){
@@ -511,6 +529,10 @@ var Game = {
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
 		this.textoVidas.text = this.vidas;
 		this.checkGameOver();	
 
@@ -527,6 +549,10 @@ var Game = {
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
 		this.textoVidas.text = this.vidas;
 		this.checkGameOver();	
   	}, 
@@ -545,6 +571,10 @@ var Game = {
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
 		this.textoVidas.text = this.vidas;
 		this.checkGameOver();	
   	}

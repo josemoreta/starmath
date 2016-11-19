@@ -18,7 +18,7 @@ var EscolheNiveis = {
 		
 		this.add.text(this.world.centerX - 100, this.world.centerY - 100, 'Escolha seu nível!', {
 			font: "25px Arial",
-			fill: "#ff0044",
+			fill: "#ffffff",
 			align: "center",
 		});
  

@@ -18,7 +18,7 @@ var Opcoes = {
 		
 		this.controlesText = this.add.text(this.world.centerX - 130, this.world.centerY - 130, 'Controles: Botões', {
 				font: "20px Arial",
-		        fill: "#ff0044",
+		        fill: "#ffffff",
 		        align: "left"
 			});
 	},
