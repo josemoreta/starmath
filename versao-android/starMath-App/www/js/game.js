@@ -66,7 +66,7 @@ var Game = {
 	},
 
 	update: function(){
-		this.atualizoes();
+		this.atualizacoes();
 		// Faz meteoros descer (O GRUPO)
 		
 
@@ -98,7 +98,6 @@ var Game = {
 		this.load.image('cenario', 'recursos/imagens/cenario.png');
 		this.load.image('navinha', 'recursos/imagens/navinha.png');
 		this.load.image('umTiro', 'recursos/imagens/tiro.png');
-		this.load.audio('somTiro',  'recursos/audio/somTiro.ogg');
 		this.load.image('meteoro', 'recursos/imagens/meteoro.png');
 		this.load.image('coracao', 'recursos/imagens/coracao.png');
 		this.load.image('explosao', 'recursos/imagens/explosao.png');
@@ -107,6 +106,7 @@ var Game = {
 		this.load.image('botaoDireita', 'recursos/imagens/direita.png');
 		this.load.image('botaoAtira', 'recursos/imagens/atira.png');
 
+		this.load.audio('somTiro',  'recursos/audio/somTiro.ogg');
 		this.load.audio('somRespostaCerta', 'recursos/audio/somRespostaCerta.ogg');
 		this.load.audio('somRespostaErrada',  'recursos/audio/somRespostaErrada.ogg');
  		this.load.audio('somGameOver',  'recursos/audio/somGameOver.ogg');
@@ -168,6 +168,7 @@ var Game = {
 
 	
 	criaTiros: function (){
+
 		this.tiroVelocidade = 0;
 
 		this.somTiro = this.add.audio('somTiro');
@@ -193,7 +194,6 @@ var Game = {
 			}, this);
 			
 		}
-
 
 	},
 
@@ -320,15 +320,17 @@ var Game = {
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		this.textoVidas.text = this.vidas;
+
 		if (pontuacao >= 10){
 			pontuacao -= 10;
 			this.textoPontuacao.text = pontuacao;
 		}
-		this.textoVidas.text = this.vidas;
+
 		this.checkGameOver();
 	},
 
-	atualizoes: function (){
+	atualizacoes: function (){
 
 		this.cenario.tilePosition.y += this.velocidadeScrollCenario;
 		
@@ -507,6 +509,7 @@ var Game = {
   	},
 
   	criaExplosao : function(meteoro){
+
  		this.somExplosao.play();
  		this.explosaoImg =  this.add.sprite(this.navinha.x, this.navinha.y, 'explosao');
  		
@@ -522,60 +525,73 @@ var Game = {
  		meteoro.kill();	
  		this.meteoroErrado1.kill();
  		this.meteoroErrado2.kill();
+
  		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();		
+
 		this.alteraPergunta();
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		this.textoVidas.text = this.vidas;
+		
 		if (pontuacao >= 10){
 			pontuacao -= 10;
 			this.textoPontuacao.text = pontuacao;
 		}
-		this.textoVidas.text = this.vidas;
+
 		this.checkGameOver();	
 
   	},
-  	 	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
- 		this.criaExplosao(); 		
+
+  	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
+ 		this.criaExplosao();
+
  		meteoro.kill();	
  		this.meteoroCerto.kill()
  		this.meteoroErrado2.kill();
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();		
-		this.alteraPergunta();
-		this.criaMeteoros();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		if (pontuacao >= 10){
-			pontuacao -= 10;
-			this.textoPontuacao.text = pontuacao;
-		}
-		this.textoVidas.text = this.vidas;
-		this.checkGameOver();	
-  	}, 
-  		colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
- 		this.criaExplosao(); 	
- 		meteoro.kill();	
- 		this.meteoroCerto.kill();
- 		this.meteoroErrado1.kill();
+
  		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();
- 		
-
 
 		this.alteraPergunta();
 		this.criaMeteoros();
 		// verifica vidas e chama game-over
 		this.vidas--;
+		this.textoVidas.text = this.vidas;
+
 		if (pontuacao >= 10){
 			pontuacao -= 10;
 			this.textoPontuacao.text = pontuacao;
 		}
+
+		this.checkGameOver();	
+  	}, 
+  	colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
+ 		this.criaExplosao(); 	
+
+ 		meteoro.kill();	
+ 		this.meteoroCerto.kill();
+ 		this.meteoroErrado1.kill();
+
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+
+		this.alteraPergunta();
+		this.criaMeteoros();
+
+		// verifica vidas e chama game-over
+		this.vidas--;
 		this.textoVidas.text = this.vidas;
+
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
+
 		this.checkGameOver();	
   	}
 };

@@ -1,77 +1,54 @@
 var EscolheNiveis = {
 
 	preload: function(){
-		this.load.image('imgNivel1', 'recursos/imagens/nivel1.jpg');
-		this.load.image('imgNivel2', 'recursos/imagens/nivel2.jpg');
-		this.load.image('imgNivel3', 'recursos/imagens/nivel3.jpg');
-		this.load.image('imgNivel4', 'recursos/imagens/nivel4.jpg');
+		this.load.image('imgNivel1', 'recursos/imagens/nivel1.png');
+		this.load.image('imgNivel2', 'recursos/imagens/nivel2.png');
+		this.load.image('imgNivel3', 'recursos/imagens/nivel3.png');
+		this.load.image('imgNivel4', 'recursos/imagens/nivel4.png');		
+		this.load.image('botaoMenu', 'recursos/imagens/botao-menu.png');
 	},
 
 	create: function(){
 		
 		this.add.sprite(0, 0, 'backgroundTelaInicial');
-		this.add.button(this.world.centerX -300, this.world.centerY, 'imgNivel1', this.nivelAdicao, this);
-		this.add.button(this.world.centerX -137, this.world.centerY, 'imgNivel2', this.nivelSubtracao, this);
-		this.add.button(this.world.centerX +37, this.world.centerY, 'imgNivel3', this.nivelMultiplicacao, this);
-		this.add.button(this.world.centerX +200, this.world.centerY, 'imgNivel4', this.nivelDivicao, this);
-
-		this.add.text(this.world.centerX -200, this.world.centerY -80, 'Escolha seu nível!', {
-			font: "45px Arial",
-			fill: "#ff0044",
+		
+		this.add.button(this.world.centerX - 140, this.world.centerY - 50, 'imgNivel1', this.nivelAdicao, this);
+		this.add.button(this.world.centerX, this.world.centerY - 50, 'imgNivel2', this.nivelSubtracao, this);
+		this.add.button(this.world.centerX - 140, this.world.centerY + 20, 'imgNivel3', this.nivelMultiplicacao, this);
+		this.add.button(this.world.centerX, this.world.centerY + 20, 'imgNivel4', this.nivelDivisao, this);
+		
+		this.add.text(this.world.centerX - 100, this.world.centerY - 100, 'Escolha seu nível!', {
+			font: "25px Arial",
+			fill: "#ffffff",
 			align: "center",
-			fontWeight: "bold",
-			stroke: "#000",
-			strokeThickness: "2"
 		});
-		
-		this.add.text(this.world.centerX -285, this.world.centerY +75, 'Adição', {
-			font: "24px Arial",
-			fill: "#ff0044",
-			align: "center"
-		});
-		
-		this.add.text(this.world.centerX -137, this.world.centerY +75, 'Subtração', {
-			font: "24px Arial",
-			fill: "#ff0044",
-			align: "center"
-		});
-		
-		this.add.text(this.world.centerX +25, this.world.centerY +75, 'Multiplicação', {
-			font: "24px Arial",
-			fill: "#ff0044",
-			align: "center"
-		});
-		
-		this.add.text(this.world.centerX +212, this.world.centerY +75, 'Divisão', {
-			font: "24px Arial",
-			fill: "#ff0044",
-			align: "center"
-		});
+
+		this.add.button(this.world.centerX - 120, this.world.centerY + 90, 'botaoMenu', this.voltaMenu, this);
 
 	},
 
 	nivelAdicao : function() {
 		nivel = 1;
-		console.log("nivel: " + nivel)
 		this.state.start('Game');
 	},
 
 	nivelSubtracao : function() {
 		nivel = 2;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
 	},
 	
 	nivelMultiplicacao : function() {
 		nivel = 3;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
 	},
 	
-	nivelDivicao : function() {
+	nivelDivisao : function() {
 		nivel = 4;
-		console.log("nivel: " + nivel);
 		this.state.start('Game');
+	},
+
+	voltaMenu: function(){
+		this.state.start('Menu');
 	}
 
 };

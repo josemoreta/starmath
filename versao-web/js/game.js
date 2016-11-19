@@ -1,10 +1,11 @@
 var pontuacao;
-var velocidadeMovimentacaoMeteoros = 0.5;
-var INCREMENTO_DE_VELOCIDADE = 0.04;
 var nivel;
-var max = 10;
+
 
 var Game = {
+
+	INCREMENTO_DE_VELOCIDADE : 0.02,
+	PONTUACAO_VITORIA: 300,
 
 	preload: function(){
 		this.carregaRecursos();
@@ -12,55 +13,60 @@ var Game = {
 
 	create: function(){
 		this.carregaAudios();
+
+		this.maxRangeOperacao = 3;
+		this.velocidadeMovimentacaoMeteoros = 0.5;
+
 		this.criaCenarioEBackground();
 		this.criaNave();
 		this.criaTiros();
 
-			//Texto
-			this.textoPergunta = this.add.text(this.world.centerX - 100, this.world.centerY - 300, '', {
-				font: "65px Arial",
-				fill: "#ff0044",
-				align: "center"
-			});
-			this.geraPergunta();
+		//Texto
+		this.textoPergunta = this.add.text(this.world.centerX - 100, this.world.centerY - 300, '', {
+			font: "65px Arial",
+			fill: "#ffffff",
+			align: "center"
+		});
+		this.alteraPergunta();
 
-			pontuacao = 0;
-			this.textoPontuacao = this.add.text(this.world.centerX + 325, this.world.centerY - 290, pontuacao,{
-				font: '32px Arial',
-				fill: '#ff0044',
-				align: 'center'
-			});
+		pontuacao = 0;
+		this.textoPontuacao = this.add.text(this.world.centerX + 325, this.world.centerY - 290, pontuacao,{
+			font: '32px Arial',
+			fill: '#ffffff',
+			align: 'center'
+		});
 
-			this.textoPontos = this.add.text(this.world.centerX + 210, this.world.centerY - 290, 'Pontos:',{
-				font: '32px Arial',
-				fill: '#ff0044',
-				align: 'center'
-			});
+		this.textoPontos = this.add.text(this.world.centerX + 210, this.world.centerY - 290, 'Pontos:',{
+			font: '32px Arial',
+			fill: '#ffffff',
+			align: 'center'
+		});
 
-			this.vidas = 3;
-			this.textoVidas = this.add.text(this.world.centerX - 325, this.world.centerY - 290, this.vidas,{
-				font: '32px Arial',
-				fill: '#ff0044',
-				align: 'center'
-			});
+		this.vidas = 3;
+		this.textoVidas = this.add.text(this.world.centerX - 325, this.world.centerY - 290, this.vidas,{
+			font: '32px Arial',
+			fill: '#ffffff',
+			align: 'center'
+		});
 
-			// Meteoros com a resposta
-			this.meteoros = this.add.group();
-			this.meteoros.enableBody = true;
-			this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
-			this.criaMeteoros();
-		},
+		// Meteoros com a resposta
+		this.meteoros = this.add.group();
+		this.meteoros.enableBody = true;
+		this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
+		this.criaMeteoros();
+	},
 
-		update: function(){
-			this.atualizoes();
+	update: function(){
+		this.atualizacoes();
 
-			this.movimentaMeteoros();		
+		this.movimentaMeteoros();		
 
 		// Identificando colisão para cada um dos meteoros
 		// objetos que recebem colisao, funcao, 
 		this.physics.arcade.overlap(this.tiro, this.meteoroCerto, this.quandoAconteceColisaoCorreta, null, this);
 		this.physics.arcade.overlap(this.tiro, this.meteoroErrado1, this.quandoAconteceColisaoErrada, null, this);
 		this.physics.arcade.overlap(this.tiro, this.meteoroErrado2, this.quandoAconteceColisaoErrada, null, this);
+
 		this.physics.arcade.overlap(this.navinha, this.meteoroCerto, this.colisaoNaveMeteoroCerto, null, this);
 		this.physics.arcade.overlap(this.navinha, this.meteoroErrado1, this.colisaoNaveMeteoroErrado1, null, this);
 		this.physics.arcade.overlap(this.navinha, this.meteoroErrado2, this.colisaoNaveMeteoroErrado2, null, this);
@@ -110,9 +116,15 @@ var Game = {
 		this.controles = this.input.keyboard.createCursorKeys(); // retorna um objeto -> up, down, left, right
 	},
 
-	criaExplosao : function(){
-		this.somExplosao.play();
-		this.explosao = this.add.sprite(this.navinha.x, this.navinha.y, 'explosao');
+	criaExplosao : function(meteoro){
+
+ 		this.somExplosao.play();
+ 		this.explosaoImg =  this.add.sprite(this.navinha.x, this.navinha.y, 'explosao');
+ 		
+ 		this.time.events.add(400, function(){
+ 			this.explosaoImg.kill(); 			
+ 		}, this);
+
 	},
 
 	criaTiros : function (){
@@ -136,12 +148,6 @@ var Game = {
 	},
 
 	criaMeteoros : function (){
-
-		if(this.colidiu) { //recria a nave junto com os meteoros caso tenha havido uma colisão entre nave e meteoro
-			this.criaNave();
-			this.colidiu = false;
-		}
-		
 		// reseta posição do gurpo no eixo y
 		this.meteoros.y = 0;
 
@@ -191,104 +197,154 @@ var Game = {
 		pontuacao += 10;
 		this.textoPontuacao.text = pontuacao;
 		this.somRespostaCerta.play();
-		this.aumentaRangeOperacoes(pontuacao);
-		this.geraPergunta();
+		this.aumentaRangeOperacoes();
+		this.alteraPergunta();
 		this.incrementaVelocidade();
 		this.criaMeteoros();
+
+		if (pontuacao >= this.PONTUACAO_VITORIA){
+			this.somTema.stop();
+			starMath.state.start('Vitoria');
+		}
 	},
 
 	quandoAconteceColisaoErrada : function (tiroQueAcertou, meteoro){
 		tiroQueAcertou.kill();
-		this.meteoroCerto.kill();
 		meteoro.kill();	
+		
+		this.meteoroCerto.kill();
 		this.meteoroErrado1.kill();
 		this.meteoroErrado2.kill();
+
 		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();
-		this.geraPergunta();
+
+		this.somRespostaErrada.play();
+
+		this.alteraPergunta();
 		this.criaMeteoros();
+
 		this.vidas--;
 		this.textoVidas.text = this.vidas;
-		this.somRespostaErrada.play();
+
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
+
 		this.checkGameOver();
 	},
 
 	colisaoNaveMeteoroCerto : function(navinha, meteoro){
-		meteoro.kill();	
-		this.meteoroCerto.kill();
-		this.textCorreto.kill();
-		this.criaExplosao();
-		this.navinha.kill();
-		this.colidiu = true;
+ 		this.criaExplosao();
+ 		
+ 		meteoro.kill();	
+ 		this.meteoroErrado1.kill();
+ 		this.meteoroErrado2.kill();
+ 		
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();		
+		
+		this.alteraPergunta();
+		this.criaMeteoros();
+		// verifica vidas e chama game-over
+		
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
+
+		this.checkGameOver();	
 	},
 
 	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
-		meteoro.kill();	
-		this.meteoroErrado1.kill();
+ 		this.criaExplosao(); 		
+ 		
+ 		meteoro.kill();	
+ 		this.meteoroCerto.kill()
+ 		this.meteoroErrado2.kill();
+ 		
+ 		this.textCorreto.kill();
 		this.textErrado1.kill();
-		this.criaExplosao();
-		this.navinha.kill();
-		this.colidiu = true;
-	},
-
-	colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
-		meteoro.kill();	
-		this.meteoroErrado2.kill();
-		this.textErrado2.kill();
-		this.criaExplosao();
-		this.navinha.kill();
-		this.colidiu = true;
-	},
-
-	geraPergunta : function (){
+		this.textErrado2.kill();		
 		
-		if(nivel == 1) {
-			var op = 1;
+		this.alteraPergunta();
+		this.criaMeteoros();
+		
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
 
-		} else if(nivel == 2) {
-			var op = this.getRandomInt(1, 2);
-
-		} else if(nivel == 3) {
-			var op = this.getRandomInt(1, 3);
-
-		} else {
-			var op = this.getRandomInt(1, 4);
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
 		}
+
+		this.checkGameOver();
+	},
+
+  	colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
+ 		this.criaExplosao(); 	
+
+ 		meteoro.kill();	
+ 		this.meteoroCerto.kill();
+ 		this.meteoroErrado1.kill();
+
+ 		this.textCorreto.kill();
+		this.textErrado1.kill();
+		this.textErrado2.kill();
+
+		this.alteraPergunta();
+		this.criaMeteoros();
+
+		// verifica vidas e chama game-over
+		this.vidas--;
+		this.textoVidas.text = this.vidas;
+
+		if (pontuacao >= 10){
+			pontuacao -= 10;
+			this.textoPontuacao.text = pontuacao;
+		}
+
+		this.checkGameOver();	
+  	},
+
+	alteraPergunta : function (){
 		
-		var a = this.getRandomInt(0, max);
-		var b = this.getRandomInt(0, max);
+		var op = this.getRandomInt(1, nivel);
+		var a = this.getRandomInt(1, this.maxRangeOperacao);
+		var b = this.getRandomInt(1, this.maxRangeOperacao);
 
 
 		if (op == 1) { //soma
 			this.respostaCorreta = a + b;
 			this.textoPergunta.text = a + '+' + b + " = ?"
-
 		} else if (op == 2) { //subtração
 
 			//Evita respostas das operações com negativos
 			if (a < b) {
-				temp = a;
+				var temp = a;
 				a = b;
 				b = temp;
 			}
 
 			this.respostaCorreta = a - b;
 			this.textoPergunta.text = a + '-' + b + " = ?"
-
 		} else 	if (op == 3) { //multiplicação
+			a = this.getRandomInt(1, 10);
+			b = this.getRandomInt(1, 10);
 			this.respostaCorreta = a * b;
 			this.textoPergunta.text = a + 'x' + b + " = ?"
-
 		} else { //divisão -> op == 4
 			//Evita respostas das operações com valores irracionais
 			while(a%b != 0) {
-				var a = this.getRandomInt(0, max);
-				var b = this.getRandomInt(0, max);
-				//console.log( a+"/"+b);
-			}
-			if(b == 0) { //evita divisão por 0;
-				b++;
+				a = this.getRandomInt(1, 10);
+				b = this.getRandomInt(1, 10);
 			}
 			this.respostaCorreta = a / b;
 			this.textoPergunta.text = a + '÷' + b + " = ?"
@@ -296,7 +352,7 @@ var Game = {
 
 	},
 
-	atualizoes : function (){
+	atualizacoes : function (){
 
 		this.cenario.tilePosition.y += this.velocidadeScrollCenario;
 		
@@ -317,23 +373,23 @@ var Game = {
 	},
 
 	atira : function (){
-		if(!this.colidiu) {
-			this.umTiro = this.tiro.getFirstExists(false);
-			this.somTiro.play();
+		
+		this.umTiro = this.tiro.getFirstExists(false);
+		this.somTiro.play();
 
-			if(this.time.now > this.tiroVelocidade){
-			//console.log('entrou no primeiro if');
-			if(this.umTiro){
+		if(this.time.now > this.tiroVelocidade){
+		
+		if(this.umTiro){
+			
 				
-					//console.log('entrou no segundo if')
-					this.umTiro.reset(this.navinha.x,this.navinha.y);
-					// Quão rápido sobe a bala
-					this.umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
-					// De quanto em quanto tempo sai uma bala
-					this.tiroVelocidade = this.time.now + 200;
-				}
+				this.umTiro.reset(this.navinha.x,this.navinha.y);
+				// Quão rápido sobe a bala
+				this.umTiro.body.velocity.y = -300; //pixels por segundo - rate / velocidade
+				// De quanto em quanto tempo sai uma bala
+				this.tiroVelocidade = this.time.now + 200;
 			}
 		}
+		
 	},
 
 	getPosicaoMeteoros : function (){
@@ -346,15 +402,13 @@ var Game = {
 		this.posicoes.sort(function(a,b){
 			return a-b;
 		});
-		//console.log('ordenando: '+ this.posicoes);
+
 		if(this.posicoes[1] - this.posicoes[0] <= 50){
 			this.posicoes[1] += 50;
-			//console.log('primeiro if ' + this.posicoes);
 		}
 
 		if(this.posicoes[2] - this.posicoes[1] <= 50){
 			this.posicoes[2] += 100;	
-			//console.log('segundo if ' + this.posicoes);	
 		}
 		this.shuffle();
 		
@@ -399,22 +453,19 @@ var Game = {
 	},
 
 	movimentaMeteoros : function (){
-		this.meteoros.y += velocidadeMovimentacaoMeteoros;
-		this.textCorreto.y += velocidadeMovimentacaoMeteoros;
-		this.textErrado1.y += velocidadeMovimentacaoMeteoros;
-		this.textErrado2.y += velocidadeMovimentacaoMeteoros;
+		this.meteoros.y += this.velocidadeMovimentacaoMeteoros;
+		this.textCorreto.y += this.velocidadeMovimentacaoMeteoros;
+		this.textErrado1.y += this.velocidadeMovimentacaoMeteoros;
+		this.textErrado2.y += this.velocidadeMovimentacaoMeteoros;
 	},
 
 	incrementaVelocidade : function(){
-		velocidadeMovimentacaoMeteoros += INCREMENTO_DE_VELOCIDADE;
-		console.log(velocidadeMovimentacaoMeteoros);
+		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
 	},
 
-	aumentaRangeOperacoes : function(pontuacao) {
-		if (pontuacao%100 == 0) { //aumenta a range a cada 100 pontos
-			max += 1;
-			console.log("range aumentada");
-			console.log("valor maximo = " + max);
+	aumentaRangeOperacoes : function() {
+		if (pontuacao % 20 == 0){
+			this.maxRangeOperacao += 1;
 		}
 	}
 };

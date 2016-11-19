@@ -6,8 +6,7 @@ var GameOver = {
 	},
 
 	create: function(){
-		//window.plugins.insomnia.allowSleepAgain();		
- 	
+		 	
  		this.add.sprite(0, 0, 'backgroundGameOver');
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'botaoIniciar', this.jogaNovamente, this);
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 50, 'botaoMenu', this.voltaProMenu, this);
@@ -16,19 +15,19 @@ var GameOver = {
 		
 		this.add.text(this.world.centerX - 95, this.world.centerY - 250, 'Game-over!!', {
 			font: "34px Arial",
-		    fill: "#ff0044",
+		    fill: "#ffffff",
 		    align: "center"
 		});
 
 		this.add.text(this.world.centerX - 50, this.world.centerY + 150, 'Uau!!', {
 		 		font: "34px Arial",
-		         fill: "#ff0044",
+		         fill: "#ffffff",
 		         align: "center"
 		});
 		
 		this.add.text(this.world.centerX - 80, this.world.centerY + 190, pontuacao + ' pontos', {
 		 		font: "34px Arial",
-		         fill: "#ff0044",
+		         fill: "#ffffff",
 		        align: "center"
 		});
 	},
@@ -39,12 +38,10 @@ var GameOver = {
 
 	jogaNovamente: function(){
 		starMath.state.start('Game');
-		velocidadeMovimentacaoMeteoros = 0.5;
 	},
 
 	voltaProMenu: function(){
 		starMath.state.start('Menu');
-		velocidadeMovimentacaoMeteoros = 0.5;
 	}
 
 };
