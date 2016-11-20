@@ -6,8 +6,8 @@ var nivel;
 var Game = {
 
 	
-	PONTUACAO_VITORIA: 100,
-	INCREMENTO_DE_VELOCIDADE : 0.04,
+	PONTUACAO_VITORIA: 300,
+	INCREMENTO_DE_VELOCIDADE : 0.02,
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
@@ -89,8 +89,6 @@ var Game = {
 		this.physics.arcade.overlap(this.navinha, this.meteoroErrado2, this.colisaoNaveMeteoroErrado2, null, this);
 
 		this.checkGameOver();
-		console.log('Nivel: ' + nivel);
-		console.log('Max Range: '+ this.maxRangeOperacao);
 
 	},
 
@@ -356,9 +354,9 @@ var Game = {
 			
 		this.somTiro.play();
 		if(this.time.now > this.tiroVelocidade){
-			//console.log('entrou no primeiro if');
+			
 			if(this.umTiro){
-				//console.log('entrou no segundo if')
+				
 				this.umTiro.reset(this.navinha.x, this.navinha.y);
 				// Quão rápido sobe a bala
 				this.umTiro.body.velocity.y = -200; //pixels por segundo - rate / velocidade
@@ -381,14 +379,12 @@ var Game = {
 			return a-b;
 		});
 
-		console.log('ordenando: '+ this.posicoes);
+		
 		if(this.posicoes[1] - this.posicoes[0] <= 50){
 			this.posicoes[1] += 50;
-			console.log('primeiro if ' + this.posicoes);
 		}
 		if(this.posicoes[2] - this.posicoes[1] <= 50){
 	 		this.posicoes[2] += 100;	
-	 		console.log('segundo if ' + this.posicoes);	
  		}
 
  		this.shuffle();
@@ -420,7 +416,7 @@ var Game = {
 	
 		/*maior que 1 e menor que -1 apenas para evitar de andar com o celular parado,
 		 	 pois mesmo praticamente parado é detectado inclinações.	 
-		 	 console.log(e);*/
+		 	 */
 		if (e.gamma >= 3 && this.navinha.body.x < 296) { 		
 			this.navinha.body.velocity.x = 115;		
 			return; // quebra o fluxo, não executa resto do código
@@ -500,8 +496,7 @@ var Game = {
 	},
 
 	incrementaVelocidade: function(){
-		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
-		console.log(this.velocidadeMovimentacaoMeteoros);
+		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;		
 	},
 
 	aumentaRangeOperacoes : function() {

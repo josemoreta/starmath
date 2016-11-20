@@ -6,7 +6,7 @@ var GameOver = {
 	},
 
 	create: function(){
-		//window.plugins.insomnia.allowSleepAgain();
+		window.plugins.insomnia.allowSleepAgain();
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
  	
  		this.add.sprite(0, 0, 'backgroundGameOver');
