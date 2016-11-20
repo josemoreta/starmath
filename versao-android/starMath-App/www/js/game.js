@@ -11,6 +11,8 @@ var Game = {
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
+	distanciaNaveBotao: 120,
+	distanciaNaveDeviceOrientation: 125,
 
 	preload: function(){
 		this.carregaRecursos();
@@ -73,9 +75,9 @@ var Game = {
 		this.movimentaMeteoros();		
 
 		if(this.andandoDireita && this.navinha.body.x < 296){
-			this.navinha.body.velocity.x = 115;
+			this.navinha.body.velocity.x = this.distanciaNaveBotao;
 		} else if(this.andandoEsquerda && this.navinha.body.x > 0){		
-			this.navinha.body.velocity.x = -115;
+			this.navinha.body.velocity.x = this.distanciaNaveBotao * -1;
 		}
 
 		// Identificando colisão para cada um dos meteoros
@@ -142,7 +144,7 @@ var Game = {
 		} else {
 			this.navinha = this.add.sprite(this.world.centerX, this.world.centerY + 120, 'navinha');						
 			
-			this.botaoDireita = this.add.button(this.world.centerX * 2 - 55, this.world.centerY * 2 - 45, 'botaoDireita');		
+			this.botaoDireita = this.add.button(this.world.centerX * 2 - 64, this.world.centerY * 2 - 50, 'botaoDireita');		
 			this.botaoDireita.onInputDown.add(function(){
 				this.andandoDireita = true;			
 			}, this);
@@ -151,7 +153,7 @@ var Game = {
 			}, this);
 
 
-			this.botaoEsquerda = this.add.button(20, this.world.centerY * 2 - 45, 'botaoEsquerda');
+			this.botaoEsquerda = this.add.button(0, this.world.centerY * 2 - 50, 'botaoEsquerda');
 			this.botaoEsquerda.onInputDown.add(function(){
 				this.andandoEsquerda = true;			
 			}, this);
@@ -187,7 +189,7 @@ var Game = {
 		if (inclinaCelular){
 			this.touchAtirar = this.input.pointer1;			
 		} else {
-			this.botaoAtirar = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 45, 'botaoAtira', function(){
+			this.botaoAtirar = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 50, 'botaoAtira', function(){
 				this.atira();
 			}, this);
 			
@@ -417,11 +419,11 @@ var Game = {
 		/*maior que 1 e menor que -1 apenas para evitar de andar com o celular parado,
 		 	 pois mesmo praticamente parado é detectado inclinações.	 
 		 	 */
-		if (e.gamma >= 3 && this.navinha.body.x < 296) { 		
-			this.navinha.body.velocity.x = 115;		
+		if (e.gamma >= 1.5 && this.navinha.body.x < 296) { 		
+			this.navinha.body.velocity.x = this.distanciaNaveDeviceOrientation;		
 			return; // quebra o fluxo, não executa resto do código
-		}  else if (e.gamma <= -3 && this.navinha.body.x > 0) {
-			this.navinha.body.velocity.x = -115;
+		}  else if (e.gamma <= -1.5 && this.navinha.body.x > 0) {
+			this.navinha.body.velocity.x = this.distanciaNaveDeviceOrientation * -1;
 			return; // quebra o fluxo, não executa resto do código
 		}
 		
