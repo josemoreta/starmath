@@ -17,7 +17,7 @@ var Vitoria = {
 		this.add.button(this.world.centerX - (245/2), this.world.centerY  + 55, 'botaoJogaNovamente', this.jogaNovamente, this);
 
 		
-		this.add.text(this.world.centerX - 150, this.world.centerY - 240, 'Você conseguiu! Parabéns', {
+		this.add.text(this.world.centerX - 150, this.world.centerY - 240, 'Você conseguiu! Parabéns!!!', {
 				font: "26px Arial",
 		        fill: "#ffffff",
 		        align: "left"
@@ -45,7 +45,7 @@ var Vitoria = {
 	},
 
 	jogaNovamenteProximoNivel: function(){
-		nivel ++;
+		nivel++;
 		starMath.state.start('Game');
 	}	
 

@@ -1,11 +1,10 @@
 var pontuacao;
 var nivel;
 
-
 var Game = {
 
-	INCREMENTO_DE_VELOCIDADE : 0.05,
-	PONTUACAO_VITORIA: 150,
+	INCREMENTO_DE_VELOCIDADE : 0.085,
+	PONTUACAO_VITORIA: 200,
 
 	preload: function(){
 		this.carregaRecursos();
@@ -83,6 +82,7 @@ var Game = {
 		this.load.audio('somGameOver', ['recursos/audio/somGameOver.mp3', 'recursos/audio/somGameOver.ogg']);
 		this.load.audio('somTema', ['recursos/audio/somTema.mp3', 'recursos/audio/somTema.ogg']);
 		this.load.audio('somExplosao', ['recursos/audio/somExplosao.mp3', 'recursos/audio/somExplosao.ogg']);
+		this.load.audio('somVitoria', ['recursos/audio/somVitoria.mp3', 'recursos/audio/somVitoria.ogg']);
 		
 		this.load.image('cenario', 'recursos/imagens/cenario.png');
 		this.load.image('navinha', 'recursos/imagens/navinha.png');
@@ -109,6 +109,8 @@ var Game = {
 		this.somRespostaErrada = this.add.audio('somRespostaErrada');
 		this.somGameOver = this.add.audio('somGameOver');
 		this.somExplosao = this.add.audio('somExplosao');
+		this.somVitoria = this.add.audio('somVitoria');
+
 	},
 
 	criaNave : function (){
@@ -139,9 +141,9 @@ var Game = {
 		this.textoMeta.alpha = 1;
 
 		this.time.events.add(3000, function(){ //exibe o texto por 3s antes de iniciar o fade-out
-			starMath.add.tween(this.textoMeta).to( {alpha: 0}, 3000, "Linear", true); //efeito fade-out de 3s (3000ms) para o texto
+			this.add.tween(this.textoMeta).to( {alpha: 0}, 3000, "Linear", true); //efeito fade-out de 3s (3000ms) para o texto
 			
-			this.time.events.add(3000, function(){ //espera o fade-out comletar antes de destruir o texto
+			this.time.events.add(3000, function(){ //espera o fade-out completar antes de destruir o texto
 				this.textoMeta.kill();
 
 			}, this);
@@ -233,6 +235,7 @@ var Game = {
 
 		if (pontuacao >= this.PONTUACAO_VITORIA){
 			this.somTema.stop();
+			this.somVitoria.play();
 			starMath.state.start('Vitoria');
 		}
 	},
@@ -244,7 +247,6 @@ var Game = {
 		this.meteoroCerto.kill();
 		this.meteoroErrado1.kill();
 		this.meteoroErrado2.kill();
-
 		this.textCorreto.kill();
 		this.textErrado1.kill();
 		this.textErrado2.kill();
@@ -278,7 +280,6 @@ var Game = {
 		
 		this.alteraPergunta();
 		this.criaMeteoros();
-		// verifica vidas e chama game-over
 		
 		this.vidas--;
 		this.textoVidas.text = this.vidas;
@@ -305,7 +306,6 @@ var Game = {
 		this.alteraPergunta();
 		this.criaMeteoros();
 		
-		// verifica vidas e chama game-over
 		this.vidas--;
 		this.textoVidas.text = this.vidas;
 
@@ -331,7 +331,6 @@ var Game = {
 		this.alteraPergunta();
 		this.criaMeteoros();
 
-		// verifica vidas e chama game-over
 		this.vidas--;
 		this.textoVidas.text = this.vidas;
 
@@ -489,7 +488,6 @@ var Game = {
 
 	incrementaVelocidade : function(){
 		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
-		console.log("velocidade: " + this.velocidadeMovimentacaoMeteoros);
 	},
 
 	aumentaRangeOperacoes : function() {
