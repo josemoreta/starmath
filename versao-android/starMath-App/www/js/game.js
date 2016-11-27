@@ -6,8 +6,8 @@ var nivel;
 var Game = {
 
 	
-	PONTUACAO_VITORIA: 300,
-	INCREMENTO_DE_VELOCIDADE : 0.02,
+	PONTUACAO_VITORIA: 200,
+	INCREMENTO_DE_VELOCIDADE : 0.060,
 	andandoEsquerda: false,
 	andandoDireita: false,
 	atirando: false,
@@ -27,6 +27,7 @@ var Game = {
 			this.somRespostaErrada = this.add.audio('somRespostaErrada');
  			this.somGameOver = this.add.audio('somGameOver');
  			this.somExplosao = this.add.audio('somExplosao');
+ 			this.somVitoria = this.add.audio('somVitoria');
 
 			this.maxRangeOperacao = 3;
 			this.velocidadeMovimentacaoMeteoros = 0.5;
@@ -34,7 +35,7 @@ var Game = {
 			this.criaCenarioBackground();
 			this.criaNave();
 			this.criaTiros();
-
+			this.criaMeta();
 
 			/*Device orientado, 
 				API para detectar inclinações do celular e movimentar a nave
@@ -111,7 +112,7 @@ var Game = {
 		this.load.audio('somRespostaErrada',  'recursos/audio/somRespostaErrada.ogg');
  		this.load.audio('somGameOver',  'recursos/audio/somGameOver.ogg');
  		this.load.audio('somTema',  'recursos/audio/somTema.ogg');
-
+ 		this.load.audio('somVitoria', 'recursos/audio/somVitoria.ogg');
  		this.load.audio('somExplosao', 'recursos/audio/somExplosao.ogg');
 	},
 
@@ -209,6 +210,8 @@ var Game = {
 	    this.textCorreto = this.add.text(this.meteoroCerto.x, this.meteoroCerto.y, this.respostaCorreta, { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
+	    	stroke: "000",
+	    	strokeThickness: 3,
 	    	wordWrap: true,
 	    	wordWrapWidth: this.meteoroCerto.width,
 	    	align: "center" });
@@ -220,6 +223,8 @@ var Game = {
 		this.textErrado1 = this.add.text(this.meteoroErrado1.x, this.meteoroErrado1.y, this.respostaCorreta - this.getRandomInt(1,7), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
+	    	stroke: "000",
+	    	strokeThickness: 3,
 	    	wordWrap: true,
 	    	wordWrapWidth: this.meteoroErrado1.width,
 	    	align: "center" });	
@@ -231,6 +236,8 @@ var Game = {
 		this.textErrado2 = this.add.text(this.meteoroErrado2.x, this.meteoroErrado2.y, this.respostaCorreta - this.getRandomInt(1,3), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
+	    	stroke: "000",
+	    	strokeThickness: 3,
 	    	wordWrap: true,
 	    	wordWrapWidth: this.meteoroErrado2.width,
 	    	align: "center" });
@@ -258,6 +265,7 @@ var Game = {
 
 		if (pontuacao >= this.PONTUACAO_VITORIA){
 			this.somTema.stop();
+			this.somVitoria.play();
 			starMath.state.start('Vitoria');
 		}
 
@@ -590,5 +598,25 @@ var Game = {
 		}
 
 		this.checkGameOver();	
-  	}
+  	},
+  	criaMeta : function(){
+
+		this.textoMeta = this.add.text(this.world.centerX - 125, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.PONTUACAO_VITORIA + ' pontos!',{
+			font: '30px Arial',
+			fill: '#ffffff',
+			align: 'center'
+		});
+
+		this.textoMeta.alpha = 1;
+
+		this.time.events.add(3000, function(){ //exibe o texto por 3s antes de iniciar o fade-out
+			this.add.tween(this.textoMeta).to( {alpha: 0}, 3000, "Linear", true); //efeito fade-out de 3s (3000ms) para o texto
+			
+			this.time.events.add(3000, function(){ //espera o fade-out completar antes de destruir o texto
+				this.textoMeta.kill();
+
+			}, this);
+		}, this);
+
+	}
 };

@@ -15,8 +15,8 @@ var Menu = {
 		this.add.sprite(0, 0, 'backgroundTelaInicial');
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'botaoIniciar', this.startGame, this);
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 50,'botaoOptions', this.startOptions, this);
-		this.add.button(this.world.centerX - (245/2), this.world.centerY + 10, 'botaoComoJogar', this.startRanking, this);
-		this.add.button(this.world.centerX - (245/2), this.world.centerY + 70, 'botaoRanking', this.startRanking, this);
+		this.add.button(this.world.centerX - (245/2), this.world.centerY + 10, 'botaoComoJogar', this.startTutorial, this);
+		//this.add.button(this.world.centerX - (245/2), this.world.centerY + 70, 'botaoRanking', this.startRanking, this);
 	},
 
 	startGame: function(){
@@ -29,5 +29,9 @@ var Menu = {
 
 	startRanking: function(){
 		//this.state.start('Ranking');
+	},
+
+	startTutorial: function(){
+		this.state.start('ComoJogar');
 	}
 };
