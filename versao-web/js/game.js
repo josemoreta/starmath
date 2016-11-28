@@ -1,5 +1,6 @@
 var pontuacao;
 var nivel;
+var modoInfinito;
 
 var Game = {
 
@@ -132,11 +133,19 @@ var Game = {
 
 	criaMeta : function(){
 
-		this.textoMeta = this.add.text(this.world.centerX - 200, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.PONTUACAO_VITORIA + ' pontos!',{
-			font: '45px Arial',
-			fill: '#ffffff',
-			align: 'center'
-		});
+		if (modoInfinito) {
+			this.textoMeta = this.add.text(this.world.centerX - 390, this.world.centerY - 50, 'Objetivo da missão: \nConseguir a maior pontuação possível.\nBoa Sorte!',{
+				font: '45px Arial',
+				fill: '#ffffff',
+				align: 'center'
+			});
+		} else {
+			this.textoMeta = this.add.text(this.world.centerX - 200, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.PONTUACAO_VITORIA + ' pontos!',{
+				font: '45px Arial',
+				fill: '#ffffff',
+				align: 'center'
+			});
+		}
 
 		this.textoMeta.alpha = 1;
 
@@ -233,10 +242,12 @@ var Game = {
 		this.incrementaVelocidade();
 		this.criaMeteoros();
 
-		if (pontuacao >= this.PONTUACAO_VITORIA){
+		if ((pontuacao >= this.PONTUACAO_VITORIA) && (!modoInfinito)){
 			this.somTema.stop();
 			this.somVitoria.play();
 			starMath.state.start('Vitoria');
+		} else if (modoInfinito){
+
 		}
 	},
 
@@ -487,7 +498,16 @@ var Game = {
 	},
 
 	incrementaVelocidade : function(){
-		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
+		if (modoInfinito) {
+			/*reduz a velocidade de incremento no modo infinito para o jogo durar mais 
+			(muito sono para pensar numa lógica melhor kkk)*/
+			this.velocidadeMovimentacaoMeteoros += (this.INCREMENTO_DE_VELOCIDADE - 0.035); 
+
+		} else {
+			this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;
+			
+		}
+		console.log(this.velocidadeMovimentacaoMeteoros);
 	},
 
 	aumentaRangeOperacoes : function() {

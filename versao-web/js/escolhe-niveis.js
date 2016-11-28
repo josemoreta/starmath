@@ -4,7 +4,8 @@ var EscolheNiveis = {
 		this.load.image('imgNivel1', 'recursos/imagens/nivel1.png');
 		this.load.image('imgNivel2', 'recursos/imagens/nivel2.png');
 		this.load.image('imgNivel3', 'recursos/imagens/nivel3.png');
-		this.load.image('imgNivel4', 'recursos/imagens/nivel4.png');		
+		this.load.image('imgNivel4', 'recursos/imagens/nivel4.png');	
+		this.load.image('imgNivelInfinito', 'recursos/imagens/nivelInfinito.png');
 		this.load.image('botaoMenu', 'recursos/imagens/botao-menu.png');
 	},
 
@@ -16,14 +17,15 @@ var EscolheNiveis = {
 		this.add.button(this.world.centerX, this.world.centerY - 50, 'imgNivel2', this.nivelSubtracao, this);
 		this.add.button(this.world.centerX - 140, this.world.centerY + 20, 'imgNivel3', this.nivelMultiplicacao, this);
 		this.add.button(this.world.centerX, this.world.centerY + 20, 'imgNivel4', this.nivelDivisao, this);
-		
+		this.add.button(this.world.centerX - 120, this.world.centerY + 80, 'imgNivelInfinito', this.nivelInfinito, this);
+
 		this.add.text(this.world.centerX - 100, this.world.centerY - 100, 'Escolha seu nível!', {
 			font: "25px Arial",
 			fill: "#ffffff",
 			align: "center",
 		});
 
-		this.add.button(this.world.centerX - 120, this.world.centerY + 90, 'botaoMenu', this.voltaMenu, this);
+		this.add.button(this.world.centerX - 120, this.world.centerY + 150, 'botaoMenu', this.voltaMenu, this);
 
 	},
 
@@ -44,6 +46,12 @@ var EscolheNiveis = {
 	
 	nivelDivisao : function() {
 		nivel = 4;
+		this.state.start('Game');
+	},
+
+	nivelInfinito : function() {
+		nivel = 4;
+		modoInfinito = true;
 		this.state.start('Game');
 	},
 
