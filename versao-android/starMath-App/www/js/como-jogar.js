@@ -2,7 +2,7 @@ var ComoJogar = {
 	
 	preload: function(){
 		this.load.image('background', 'recursos/imagens/background-game-over.png');
-		this.load.image('botaoMenu', 'recursos/imagens/botao-menu.png');
+		this.load.image('botaoMenu', 'recursos/imagens/button-menu.png');
 		
 	},
 

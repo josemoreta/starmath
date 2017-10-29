@@ -1,6 +1,6 @@
 var GameOver = {
 	preload: function(){
-		this.load.image('botaoMenu','recursos/imagens/botao-menu.png');
+		this.load.image('botaoMenu','recursos/imagens/button-menu.png');
 		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');
 
 	},

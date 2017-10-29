@@ -3,7 +3,7 @@ var Vitoria = {
 
 	preload: function(){
 		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');		
-		this.load.image('botaoMenu', 'recursos/imagens/botao-menu.png');
+		this.load.image('botaoMenu', 'recursos/imagens/button-menu.png');
 		this.load.image('botaoJogaNovamente', 'recursos/imagens/botao-jogar-novamente.png');
 		this.load.image('botaoJogaNovamenteProximoNivel', 'recursos/imagens/jogar-prox-nivel.png');
 		this.load.image('astronauta', 'recursos/imagens/astronauta.png');

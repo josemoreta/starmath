@@ -1,11 +1,11 @@
 var EscolheNiveis = {
 
 	preload: function(){
-		this.load.image('imgNivel1', 'recursos/imagens/nivel1.png');
-		this.load.image('imgNivel2', 'recursos/imagens/nivel2.png');
-		this.load.image('imgNivel3', 'recursos/imagens/nivel3.png');
-		this.load.image('imgNivel4', 'recursos/imagens/nivel4.png');
-		this.load.image('botaoMenu', 'recursos/imagens/botao-menu.png');
+		this.load.image('imgNivel1', 'recursos/imagens/level1.png');
+		this.load.image('imgNivel2', 'recursos/imagens/level2.png');
+		this.load.image('imgNivel3', 'recursos/imagens/level3.png');
+		this.load.image('imgNivel4', 'recursos/imagens/level4.png');
+		this.load.image('botaoMenu', 'recursos/imagens/button-menu.png');
 	},
 
 	create: function(){
