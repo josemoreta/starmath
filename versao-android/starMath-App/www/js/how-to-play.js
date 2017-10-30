@@ -1,8 +1,8 @@
-var ComoJogar = {
+var HowToPlay = {
 	
 	preload: function(){
 		this.load.image('background', 'recursos/imagens/background-game-over.png');
-		this.load.image('botaoMenu', 'recursos/imagens/button-menu.png');
+		this.load.image('buttonMenu', 'recursos/imagens/button-menu.png');
 		
 	},
 
@@ -18,10 +18,10 @@ var ComoJogar = {
 	    	wordWrap: true,
 	    	wordWrapWidth: 250
 		});
-		this.add.button(this.world.centerX - (245/2), this.world.centerY + 120, 'botaoMenu', this.voltaProMenu, this);		
+		this.add.button(this.world.centerX - (245/2), this.world.centerY + 120, 'buttonMenu', this.backToMenu, this);		
 	},
 	
-	voltaProMenu: function(){
+	backToMenu: function(){
 		starMath.state.start('Menu');
 	}
 

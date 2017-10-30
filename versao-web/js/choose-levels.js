@@ -13,7 +13,7 @@ var ChooseLevels = {
 		
 		this.add.sprite(0, 0, 'backgroundHomeScreen');
 		
-		this.add.button(this.world.centerX - 140, this.world.centerY - 50, 'imgLevel1', this.addLevel, this);
+		this.add.button(this.world.centerX - 140, this.world.centerY - 50, 'imgLevel1', this.additionLevel, this);
 		this.add.button(this.world.centerX, this.world.centerY - 50, 'imgLevel2', this.subtractionLevel, this);
 		this.add.button(this.world.centerX - 140, this.world.centerY + 20, 'imgLevel3', this.multiplicationLevel, this);
 		this.add.button(this.world.centerX, this.world.centerY + 20, 'imgLevel4', this.divisionLevel, this);
@@ -29,7 +29,7 @@ var ChooseLevels = {
 
 	},
 
-	addLevel : function() {
+	additionLevel : function() {
 		level = 1;
 		this.state.start('Game');
 	},

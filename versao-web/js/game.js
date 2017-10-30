@@ -245,7 +245,7 @@ var Game = {
 		if ((score >= this.VICTORY_SCORE) && (!infinityMode)){
 			this.themeSound.stop();
 			this.victorySound.play();
-			starMath.state.start('Vitoria');
+			starMath.state.start('Victory');
 		} else if (infinityMode){
 
 		}
