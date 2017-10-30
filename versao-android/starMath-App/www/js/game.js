@@ -1,622 +1,578 @@
-var inclinaCelular = false;
-var pontuacao;
-var nivel;
+var tiltPhone = false;
+var score;
+var level;
 
-
-var Game = {
-
-	
-	PONTUACAO_VITORIA: 200,
-	INCREMENTO_DE_VELOCIDADE : 0.060,
-	andandoEsquerda: false,
-	andandoDireita: false,
-	atirando: false,
-	distanciaNaveBotao: 120,
-	distanciaNaveDeviceOrientation: 125,
+var Game = {	
+	VICTORY_SCORE: 200,
+	VELOCITY_INCREASE : 0.060,
+	goingLeft: false,
+	goingRight: false,
+	shooting: false,
+	shipButtonDistance: 120,
+	shipDeviceOrientationDistance: 125,
 
 	preload: function(){
-		this.carregaRecursos();
+		this.loadResources();
 	},
 
 	create: function(){
 			//window.plugins.insomnia.keepAwake();
 			this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
 			
-			this.somTema = this.add.audio('somTema'); 			
- 			this.somRespostaCerta = this.add.audio('somRespostaCerta');
-			this.somRespostaErrada = this.add.audio('somRespostaErrada');
- 			this.somGameOver = this.add.audio('somGameOver');
- 			this.somExplosao = this.add.audio('somExplosao');
- 			this.somVitoria = this.add.audio('somVitoria');
+			this.themeSound = this.add.audio('themeSound'); 			
+ 			this.rightAnswerSound = this.add.audio('rightAnswerSound');
+			this.wrongAnswerSound = this.add.audio('wrongAnswerSound');
+ 			this.gameOverSound = this.add.audio('gameOverSound');
+ 			this.explosionSound = this.add.audio('explosionSound');
+ 			this.victorySound = this.add.audio('victorySound');
 
-			this.maxRangeOperacao = 3;
-			this.velocidadeMovimentacaoMeteoros = 0.5;
+			this.operationMaxRange = 3;
+			this.meteorMovementVelocity = 0.5;
 
-			this.criaCenarioBackground();
-			this.criaNave();
-			this.criaTiros();
-			this.criaMeta();
+			this.createBackgroundScenario();
+			this.createShip();
+			this.createShots();
+			this.createFinishLine();
 
-			/*Device orientado, 
-				API para detectar inclinações do celular e movimentar a nave
-				*/
-			if (inclinaCelular){
-				window.addEventListener("deviceorientation", this.chamaHandlerOrientation , true);				
-			}
-			
+			/* Oriented device,
+				API ro detect phone tilts and to move the ship */
+			if (tiltPhone) {
+				window.addEventListener("deviceorientation", this.callOrientationHandler , true);				
+			}			
 
-			//Texto
-			this.textoPergunta = this.add.text(this.world.centerX - 175, this.world.centerY - 300, '', {
+			// Text
+			this.questionText = this.add.text(this.world.centerX - 175, this.world.centerY - 300, '', {
 				font: "40px Arial",
 		        fill: "#ffffff",
 		        align: "left"
 			});
-			this.alteraPergunta();
+			this.changeQuestion();
 
-			pontuacao = 0;
-			this.textoPontuacao = this.add.text(this.world.centerX + 100, this.world.centerY - 300, pontuacao,{
+			score = 0;
+			this.textScore = this.add.text(this.world.centerX + 100, this.world.centerY - 300, score,{
 				font: '35px Arial',
 				fill: '#ffffff',
 				align: 'center'
 			});
 
-			// Meteoros com a resposta
-			this.meteoros = this.add.group();
-			this.meteoros.enableBody = true;
-			this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
-			this.criaMeteoros();
-
+			// Meteors with the answer
+			this.meteors = this.add.group();
+			this.meteors.enableBody = true;
+			this.meteors.physicsBodyType = Phaser.Physics.ARCADE;
+			this.createMeteors();
 	},
 
 	update: function(){
-		this.atualizacoes();
-		// Faz meteoros descer (O GRUPO)
-		
+		this.updates();
+		// Make meteors go down (THE GROUP)		
 
-		this.movimentaMeteoros();		
+		this.moveMeteors();		
 
-		if(this.andandoDireita && this.navinha.body.x < 296){
-			this.navinha.body.velocity.x = this.distanciaNaveBotao;
-		} else if(this.andandoEsquerda && this.navinha.body.x > 0){		
-			this.navinha.body.velocity.x = this.distanciaNaveBotao * -1;
+		if (this.goingRight && this.ship.body.x < 296) {
+			this.ship.body.velocity.x = this.shipButtonDistance;
+		} else if(this.goingLeft && this.ship.body.x > 0){		
+			this.ship.body.velocity.x = this.shipButtonDistance * -1;
 		}
 
-		// Identificando colisão para cada um dos meteoros
-			// objetos que recebem colisao, funcao, 
-		this.physics.arcade.overlap(this.tiro, this.meteoroCerto, this.quandoAconteceColisaoCorreta, null, this);
-		this.physics.arcade.overlap(this.tiro, this.meteoroErrado1, this.quandoAconteceColisaoErrada, null, this);
-		this.physics.arcade.overlap(this.tiro, this.meteoroErrado2, this.quandoAconteceColisaoErrada, null, this);
+		// Identifying the collision for each meteor
+		// objects that receive collision, function 
+		this.physics.arcade.overlap(this.shot, this.rightMeteor, this.whenRightCollisionHappens, null, this);
+		this.physics.arcade.overlap(this.shot, this.wrongMeteor1, this.whenWrongCollisionHappens, null, this);
+		this.physics.arcade.overlap(this.shot, this.wrongMeteor2, this.whenWrongCollisionHappens, null, this);
 
-		this.physics.arcade.overlap(this.navinha, this.meteoroCerto, this.colisaoNaveMeteoroCerto, null, this);
-		this.physics.arcade.overlap(this.navinha, this.meteoroErrado1, this.colisaoNaveMeteoroErrado1, null, this);
-		this.physics.arcade.overlap(this.navinha, this.meteoroErrado2, this.colisaoNaveMeteoroErrado2, null, this);
+		this.physics.arcade.overlap(this.ship, this.rightMeteor, this.shipRightMeteorCollision, null, this);
+		this.physics.arcade.overlap(this.ship, this.wrongMeteor1, this.shipWrongMeteorCollision1, null, this);
+		this.physics.arcade.overlap(this.ship, this.wrongMeteor2, this.shipWrongMeteorCollision2, null, this);
 
 		this.checkGameOver();
-
 	},
 
-	carregaRecursos : function (){
-		this.load.image('cenario', 'recursos/imagens/cenario.png');
-		this.load.image('navinha', 'recursos/imagens/navinha.png');
-		this.load.image('umTiro', 'recursos/imagens/tiro.png');
-		this.load.image('meteoro', 'recursos/imagens/meteoro.png');
-		this.load.image('coracao', 'recursos/imagens/coracao.png');
-		this.load.image('explosao', 'recursos/imagens/explosao.png');
+	loadResources : function (){
+		this.load.image('scenario', 'resources/imagens/scenario.png');
+		this.load.image('ship', 'resources/imagens/ship.png');
+		this.load.image('oneShot', 'resources/imagens/shot.png');
+		this.load.image('meteor', 'resources/imagens/meteor.png');
+		this.load.image('heart', 'resources/imagens/heart.png');
+		this.load.image('explosion', 'resources/imagens/explosion.png');
 
-		this.load.image('botaoEsquerda', 'recursos/imagens/esquerda.png');
-		this.load.image('botaoDireita', 'recursos/imagens/direita.png');
-		this.load.image('botaoAtira', 'recursos/imagens/atira.png');
+		this.load.image('leftButton', 'resources/imagens/left.png');
+		this.load.image('rightButton', 'resources/imagens/right.png');
+		this.load.image('shootButton', 'resources/imagens/shoot.png');
 
-		this.load.audio('somTiro',  'recursos/audio/somTiro.ogg');
-		this.load.audio('somRespostaCerta', 'recursos/audio/somRespostaCerta.ogg');
-		this.load.audio('somRespostaErrada',  'recursos/audio/somRespostaErrada.ogg');
- 		this.load.audio('somGameOver',  'recursos/audio/somGameOver.ogg');
- 		this.load.audio('somTema',  'recursos/audio/somTema.ogg');
- 		this.load.audio('somVitoria', 'recursos/audio/somVitoria.ogg');
- 		this.load.audio('somExplosao', 'recursos/audio/somExplosao.ogg');
+		this.load.audio('shotSound',  'resources/audio/shootSound.ogg');
+		this.load.audio('rightAnswerSound', 'resources/audio/rightAnswerSound.ogg');
+		this.load.audio('wrongAnswerSound',  'resources/audio/wrongAnswerSound.ogg');
+ 		this.load.audio('gameOverSound',  'resources/audio/gameOverSound.ogg');
+ 		this.load.audio('themeSound',  'resources/audio/themeSound.ogg');
+ 		this.load.audio('victorySound', 'resources/audio/victorySound.ogg');
+ 		this.load.audio('explosionSound', 'resources/audio/explosionSound.ogg');
 	},
 
-
-
-	criaCenarioBackground: function (){
-		// refatorar tamanho do cenario aqui
-		if (inclinaCelular){
-			this.cenario = this.add.tileSprite(0, 48, 800, 600, 'cenario'); // x, y, width, heigth, key
+	createBackgroundScenario: function (){
+		// refactor scenario size here
+		if (tiltPhone) {
+			this.scenario = this.add.tileSprite(0, 48, 800, 600, 'scenario'); // x, y, width, heigth, key
 		} else {
-			this.cenario = this.add.tileSprite(0, 48, 800, 500, 'cenario'); // x, y, width, heigth, key			
+			this.scenario = this.add.tileSprite(0, 48, 800, 500, 'scenario'); // x, y, width, heigth, key			
 		}
 
-		this.coracao = this.add.sprite(this.world.centerX + 25, this.world.centerY - this.world.centerY, 'coracao');
-		this.velocidadeScrollCenario = 2;
-		this.somTema.play(null, null, 0.5, true, null);
+		this.heart = this.add.sprite(this.world.centerX + 25, this.world.centerY - this.world.centerY, 'heart');
+		this.scenarioScrollVelocity = 2;
+		this.themeSound.play(null, null, 0.5, true, null);
 
-		this.vidas = 3;
-		this.textoVidas = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.vidas,{
+		this.lives = 3;
+		this.livesText = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.lives,{
 			font: '18px Arial',
 			fill: '#ffffff',
 			align: 'center'
 		});
 	},
 
-	criaNave: function (){
-		
-		if(inclinaCelular){
-			this.navinha = this.add.sprite(this.world.centerX, this.world.centerY + 175, 'navinha');			
+	createShip: function (){
+		if (tiltPhone){
+			this.ship = this.add.sprite(this.world.centerX, this.world.centerY + 175, 'ship');			
 		} else {
-			this.navinha = this.add.sprite(this.world.centerX, this.world.centerY + 120, 'navinha');						
+			this.ship = this.add.sprite(this.world.centerX, this.world.centerY + 120, 'ship');						
 			
-			this.botaoDireita = this.add.button(this.world.centerX * 2 - 64, this.world.centerY * 2 - 50, 'botaoDireita');		
-			this.botaoDireita.onInputDown.add(function(){
-				this.andandoDireita = true;			
+			this.rightButton = this.add.button(this.world.centerX * 2 - 64, this.world.centerY * 2 - 50, 'rightButton');		
+			this.rightButton.onInputDown.add(function(){
+				this.goingRight = true;			
 			}, this);
-			this.botaoDireita.onInputUp.add(function(){
-				this.andandoDireita = false;			
+			this.rightButton.onInputUp.add(function(){
+				this.goingRight = false;			
 			}, this);
 
-
-			this.botaoEsquerda = this.add.button(0, this.world.centerY * 2 - 50, 'botaoEsquerda');
-			this.botaoEsquerda.onInputDown.add(function(){
-				this.andandoEsquerda = true;			
+			this.leftButton = this.add.button(0, this.world.centerY * 2 - 50, 'leftButton');
+			this.leftButton.onInputDown.add(function(){
+				this.goingLeft = true;			
 			}, this);
-			this.botaoEsquerda.onInputUp.add(function(){
-				this.andandoEsquerda = false;			
+			this.leftButton.onInputUp.add(function(){
+				this.goingLeft = false;			
 			}, this);			
 		}
 
-		this.physics.enable(this.navinha, Phaser.Physics.ARCADE); // aplicar físicas (object, system)
-		
+		this.physics.enable(this.ship, Phaser.Physics.ARCADE); // apply physics (object, system)
 	},
-
 	
-	criaTiros: function (){
+	createShots: function (){
 
-		this.tiroVelocidade = 0;
+		this.shootingSpeed = 0;
 
-		this.somTiro = this.add.audio('somTiro');
+		this.shotSound = this.add.audio('shotSound');
 		
-		this.tiro = this.add.group();
-		// Faz com que os objetos do grupo tenham um 'corpo' e em seguida seta o sistema de fisica aplicado a esses corpos
-		this.tiro.enableBody = true;
-		this.tiro.physicsBodyType = Phaser.Physics.ARCADE;
-		// Cria um grupo de 30 sprites usando a imagem da key fornecida
-		this.tiro.createMultiple(30, 'umTiro');
-		// Posiçao do tiro no bico da nave   ---- Altura em que o tiro sai, pra sair da boca da nave e não do meio da tela
-		this.tiro.setAll('anchor.x', -0.9);
-		this.tiro.setAll('anchor.y', 0.8);
-		// Faz o objeto ser killado após sair da tela chamando automaticamente a função inWorld que retorna false	
-		this.tiro.setAll('outOfBoundsKill', true);
-		this.tiro.setAll('checkWorldBounds', true);
+		this.shot = this.add.group();
+		// Makes that objects of the groups have a 'body' and sets the physics system applied to those bodies
+		this.shot.enableBody = true;
+		this.shot.physicsBodyType = Phaser.Physics.ARCADE;
+		// Creates a group of 30 sprites using the supplied key image
+		this.shot.createMultiple(30, 'oneShot');
+		// Shot position on tip of the ship --- Height the shot comes from, to leave the tip of the ship and not the middle of the canvar
+		this.shot.setAll('anchor.x', -0.9);
+		this.shot.setAll('anchor.y', 0.8);
+		// Makes the object get killed after leaving the canvas, automatically calling the inWorld function which returns false
+		this.shot.setAll('outOfBoundsKill', true);
+		this.shot.setAll('checkWorldBounds', true);
 
-		if (inclinaCelular){
-			this.touchAtirar = this.input.pointer1;			
+		if (tiltPhone){
+			this.touchShoot = this.input.pointer1;			
 		} else {
-			this.botaoAtirar = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 50, 'botaoAtira', function(){
-				this.atira();
+			this.shootButton = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 50, 'shootButton', function(){
+				this.shoot();
 			}, this);
-			
 		}
-
 	},
 
+	createMeteors: function (){
+		// resets group position on y axis
+		this.meteors.y = 0;
 
-	criaMeteoros: function (){
-		// reseta posição do gurpo no eixo y
-		this.meteoros.y = 0;
+		this.getMeteorsPosition();
 
-		this.getPosicaoMeteoros();
-
-		this.meteoroCerto = this.meteoros.create(this.posicoes[0], 65,'meteoro');
-		this.meteoroCerto.anchor.setTo(0.5,0.5);		
-	    this.textCorreto = this.add.text(this.meteoroCerto.x, this.meteoroCerto.y, this.respostaCorreta, { 
+		this.rightMeteor = this.meteors.create(this.posicoes[0], 65,'meteor');
+		this.rightMeteor.anchor.setTo(0.5,0.5);		
+	    this.rightText = this.add.text(this.rightMeteor.x, this.rightMeteor.y, this.rightAnswer, { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
 	    	strokeThickness: 3,
 	    	wordWrap: true,
-	    	wordWrapWidth: this.meteoroCerto.width,
+	    	wordWrapWidth: this.rightMeteor.width,
 	    	align: "center" });
-	    this.textCorreto.anchor.set(0.5, 0.5);
+	    this.rightText.anchor.set(0.5, 0.5);
 	    
-
-		this.meteoroErrado1 = this.meteoros.create(this.posicoes[1], 65, 'meteoro');
-		this.meteoroErrado1.anchor.setTo(0.5, 0.5);
-		this.textErrado1 = this.add.text(this.meteoroErrado1.x, this.meteoroErrado1.y, this.respostaCorreta - this.getRandomInt(1,7), { 
+		this.wrongMeteor1 = this.meteors.create(this.posicoes[1], 65, 'meteor');
+		this.wrongMeteor1.anchor.setTo(0.5, 0.5);
+		this.wrongText1 = this.add.text(this.wrongMeteor1.x, this.wrongMeteor1.y, this.rightAnswer - this.getRandomInt(1,7), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
 	    	strokeThickness: 3,
 	    	wordWrap: true,
-	    	wordWrapWidth: this.meteoroErrado1.width,
+	    	wordWrapWidth: this.wrongMeteor1.width,
 	    	align: "center" });	
-		this.textErrado1.anchor.set(0.5, 0.5);
+		this.wrongText1.anchor.set(0.5, 0.5);
 
-
-		this.meteoroErrado2 = this.meteoros.create(this.posicoes[2], 65, 'meteoro');
-		this.meteoroErrado2.anchor.setTo(0.5, 0.5);
-		this.textErrado2 = this.add.text(this.meteoroErrado2.x, this.meteoroErrado2.y, this.respostaCorreta - this.getRandomInt(1,3), { 
+		this.wrongMeteor2 = this.meteors.create(this.posicoes[2], 65, 'meteor');
+		this.wrongMeteor2.anchor.setTo(0.5, 0.5);
+		this.wrongText2 = this.add.text(this.wrongMeteor2.x, this.wrongMeteor2.y, this.rightAnswer - this.getRandomInt(1,3), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
 	    	strokeThickness: 3,
 	    	wordWrap: true,
-	    	wordWrapWidth: this.meteoroErrado2.width,
+	    	wordWrapWidth: this.wrongMeteor2.width,
 	    	align: "center" });
-		this.textErrado2.anchor.set(0.5, 0.5);
-
-
+		this.wrongText2.anchor.set(0.5, 0.5);
 	},
 
-	quandoAconteceColisaoCorreta: function (tiroQueAcertou, meteoro){
-		tiroQueAcertou.kill();
-		meteoro.kill();	
-		this.meteoroErrado1.kill();
-		this.meteoroErrado2.kill();
-		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
-		pontuacao += 10;
-		this.textoPontuacao.text = pontuacao;
+	whenRightCollisionHappens: function (shotHit, meteor){
+		shotHit.kill();
+		meteor.kill();	
+		this.wrongMeteor1.kill();
+		this.wrongMeteor2.kill();
+		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
+		score += 10;
+		this.textScore.text = score;
 
-		this.somRespostaCerta.play();
-		this.aumentaRangeOperacoes();
-		this.alteraPergunta();
-		this.incrementaVelocidade();
-		this.criaMeteoros();
+		this.rightAnswerSound.play();
+		this.increaseOperationsRange();
+		this.changeQuestion();
+		this.increaseVelocity();
+		this.createMeteors();
 
-		if (pontuacao >= this.PONTUACAO_VITORIA){
-			this.somTema.stop();
-			this.somVitoria.play();
-			starMath.state.start('Vitoria');
+		if (score >= this.VICTORY_SCORE) {
+			this.themeSound.stop();
+			this.victorySound.play();
+			starMath.state.start('Victory');
 		}
-
-
 	},
 
+	changeQuestion: function (){
+		var op = this.getRandomInt(1, level);
+		var a = this.getRandomInt(1, this.operationMaxRange);
+		var b = this.getRandomInt(1, this.operationMaxRange);
 
-	alteraPergunta: function (){
-		var op = this.getRandomInt(1, nivel);
-		var a = this.getRandomInt(1, this.maxRangeOperacao);
-		var b = this.getRandomInt(1, this.maxRangeOperacao);
-
-
-		if (op == 1) { //soma
-			this.respostaCorreta = a + b;
-			this.textoPergunta.text = a + '+' + b + " = ?"
-		} else if (op == 2) { //subtração
-
-			//Evita respostas das operações com negativos
+		if (op == 1) { // sum
+			this.rightAnswer = a + b;
+			this.questionText.text = a + '+' + b + " = ?"
+		} else if (op == 2) { // subtraction
+			// Avoid answers from operations with negatives
 			if (a < b) {
 				var temp = a;
 				a = b;
 				b = temp;
 			}
 
-			this.respostaCorreta = a - b;
-			this.textoPergunta.text = a + '-' + b + " = ?"
-		} else 	if (op == 3) { //multiplicação
+			this.rightAnswer = a - b;
+			this.questionText.text = a + '-' + b + " = ?"
+		} else if (op == 3) { // multiplication
 			a = this.getRandomInt(1, 10);
 			b = this.getRandomInt(1, 10);
-			this.respostaCorreta = a * b;
-			this.textoPergunta.text = a + 'x' + b + " = ?"
-		} else { //divisão -> op == 4
-			//Evita respostas das operações com valores irracionais
-			while(a%b != 0) {
+			this.rightAnswer = a * b;
+			this.questionText.text = a + 'x' + b + " = ?"
+		} else { // division -> op == 4
+			// Avoid answers from operations with irrational values
+			while (a % b != 0) {
 				a = this.getRandomInt(1, 10);
 				b = this.getRandomInt(1, 10);
 			}
-			this.respostaCorreta = a / b;
-			this.textoPergunta.text = a + '÷' + b + " = ?"
+			this.rightAnswer = a / b;
+			this.questionText.text = a + '÷' + b + " = ?"
 		}
 	},
 
+	whenWrongCollisionHappens: function (shotHit, meteor) {
+		shotHit.kill();
+		meteor.kill();
 
-	quandoAconteceColisaoErrada: function (tiroQueAcertou, meteoro){
-		tiroQueAcertou.kill();
-		meteoro.kill();
+		this.rightMeteor.kill();
+		this.wrongMeteor1.kill();
+		this.wrongMeteor2.kill();
 
-		this.meteoroCerto.kill();
-		this.meteoroErrado1.kill();
-		this.meteoroErrado2.kill();
+		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
 
-		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
+		this.wrongAnswerSound.play();
 
-		this.somRespostaErrada.play();
+		this.changeQuestion();
+		this.createMeteors();
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 
-		this.alteraPergunta();
-		this.criaMeteoros();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
-
-		if (pontuacao >= 10){
-			pontuacao -= 10;
-			this.textoPontuacao.text = pontuacao;
+		if (score >= 10) {
+			score -= 10;
+			this.textScore.text = score;
 		}
 
 		this.checkGameOver();
 	},
 
-	atualizacoes: function (){
-
-		this.cenario.tilePosition.y += this.velocidadeScrollCenario;
+	updates: function () {
+		this.scenario.tilePosition.y += this.scenarioScrollVelocity;
 		
+		// reset to 0
+		this.ship.body.velocity.x = 0;
 
-
-		//resetando para 0
-		this.navinha.body.velocity.x = 0;
-
-		if (inclinaCelular){
-			if(this.touchAtirar.isDown){
-				this.atira();	
+		if (tiltPhone){
+			if (this.touchShoot.isDown){
+				this.shoot();	
 			}			
-		} //else if (this.atirando){
-			//this.atira();
+		} //else if (this.shooting){
+			//this.shoot();
 		//}
-
-
 	},
 
-	atira: function (){
-		
-		this.umTiro = this.tiro.getFirstExists(false);
+	shoot: function () {
+		this.oneShot = this.tiro.getFirstExists(false);
 			
-		this.somTiro.play();
-		if(this.time.now > this.tiroVelocidade){
+		this.shotSound.play();
+		if (this.time.now > this.shootingSpeed) {
 			
-			if(this.umTiro){
-				
-				this.umTiro.reset(this.navinha.x, this.navinha.y);
-				// Quão rápido sobe a bala
-				this.umTiro.body.velocity.y = -200; //pixels por segundo - rate / velocidade
-				// De quanto em quanto tempo sai uma bala
-				this.tiroVelocidade = this.time.now + 300;
+			if (this.oneShot) {
+				this.oneShot.reset(this.ship.x, this.ship.y);
+				// How fast the bullet goes up
+				this.oneShot.body.velocity.y = -200; // pixels per second - rate / velocity
+				// How often a bullet is shot
+				this.shootingSpeed = this.time.now + 300;
 			}
 		}
 	},
 
-
-	getPosicaoMeteoros: function (){
-		this.posicoes  = [
+	getMeteorsPosition: function (){
+		this.positions = [
 			this.getRandomInt(20, 235),
 			this.getRandomInt(20, 235),
 			this.getRandomInt(20, 235)
 		];
 
-
-		this.posicoes.sort(function(a,b){
-			return a-b;
+		this.positions.sort(function(a,b) {
+			return a - b;
 		});
-
 		
-		if(this.posicoes[1] - this.posicoes[0] <= 50){
-			this.posicoes[1] += 50;
+		if (this.positions[1] - this.positions[0] <= 50) {
+			this.positions[1] += 50;
 		}
-		if(this.posicoes[2] - this.posicoes[1] <= 50){
-	 		this.posicoes[2] += 100;	
+		if (this.positions[2] - this.positions[1] <= 50) {
+	 		this.positions[2] += 100;	
  		}
 
  		this.shuffle();
-		// implementar lógica da posição dos meteoros, para que um não sobreponha o outro
-
+		// implement meteors position logic, so that one doesn't overlap the other
 		
 	},
 
 	shuffle: function () {
 	    var j, x, i;
-	    for (i = this.posicoes.length; i; i--) {
+	    for (i = this.positions.length; i; i--) {
 		    j = Math.floor(Math.random() * i);
-		    x = this.posicoes[i - 1];
-		    this.posicoes[i - 1] = this.posicoes[j];
-		    this.posicoes[j] = x;
+		    x = this.positions[i - 1];
+		    this.positions[i - 1] = this.positions[j];
+		    this.positions[j] = x;
 	    }
 	},
-
 
 	getRandomInt: function (min, max) {
 	 	return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
-	chamaHandlerOrientation: function(e){
+	callOrientationHandler: function(e){
 		Reflect.apply(Game.handleOrientation, Game, [e])
 	},
 
 	handleOrientation: function (e){
-	
-		/*maior que 1 e menor que -1 apenas para evitar de andar com o celular parado,
-		 	 pois mesmo praticamente parado é detectado inclinações.	 
-		 	 */
-		if (e.gamma >= 1.5 && this.navinha.body.x < 296) { 		
-			this.navinha.body.velocity.x = this.distanciaNaveDeviceOrientation;		
-			return; // quebra o fluxo, não executa resto do código
-		}  else if (e.gamma <= -1.5 && this.navinha.body.x > 0) {
-			this.navinha.body.velocity.x = this.distanciaNaveDeviceOrientation * -1;
-			return; // quebra o fluxo, não executa resto do código
+		/* greater than 1 and less than -1 just to avoid moving with the phone stopped,
+		because even when it is stopped some tilts are detected */
+		if (e.gamma >= 1.5 && this.ship.body.x < 296) { 		
+			this.ship.body.velocity.x = this.shipDeviceOrientationDistance;		
+			return; // break the flow, don't execute the rest of the code
+		}  else if (e.gamma <= -1.5 && this.ship.body.x > 0) {
+			this.ship.body.velocity.x = this.shipDeviceOrientationDistance * -1;
+			return; // break the flow, don't execute the rest of the code
 		}
 		
-		// só volta pra zero quando não temm inclinação (tilt)
-		this.navinha.body.velocity.x = 0;		
+		// only resets to zero when there is no tilt
+		this.ship.body.velocity.x = 0;		
 	},
 
 	checkGameOver: function(){
-		if(inclinaCelular){
-			if (this.meteoros.y > 600 && this.vidas > 0) {
-				this.vidas--;
-				this.textoVidas.text = this.vidas;
-				if (pontuacao >= 10){
-					pontuacao -= 10;
-					this.textoPontuacao.text = pontuacao;
+		if (tiltPhone) {
+			if (this.meteors.y > 600 && this.lives > 0) {
+				this.lives--;
+				this.livesText.text = this.lives;
+				if (score >= 10){
+					score -= 10;
+					this.textScore.text = score;
 				}
-				this.meteoroErrado1.kill();
-				this.meteoroErrado2.kill();
-				this.meteoroCerto.kill();
-				this.textCorreto.kill();
-				this.textErrado1.kill();
-				this.textErrado2.kill();
-				this.somRespostaErrada.play();
-				this.criaMeteoros();
-			} else if(this.meteoros.y > 600 && this.vidas <= 0) {					
+				this.wrongMeteor1.kill();
+				this.wrongMeteor2.kill();
+				this.rightMeteor.kill();
+				this.rightText.kill();
+				this.wrongText1.kill();
+				this.wrongText2.kill();
+				this.wrongAnswerSound.play();
+				this.createMeteors();
+			} else if (this.meteors.y > 600 && this.lives <= 0) {					
 				this.gameOver();
-			} else if(this.vidas <= 0){				
+			} else if (this.lives <= 0){				
 				this.gameOver();
 			}			
 		} else {
-			if (this.meteoros.y > 480 && this.vidas > 0){
-				this.vidas--;
-				this.textoVidas.text = this.vidas;
-				if (pontuacao >= 10){
-					pontuacao -= 10;
-					this.textoPontuacao.text = pontuacao;
+			if (this.meteors.y > 480 && this.lives > 0) {
+				this.lives--;
+				this.livesText.text = this.lives;
+				if (score >= 10) {
+					score -= 10;
+					this.textScore.text = score;
 				}
-				this.meteoroErrado1.kill();
-				this.meteoroErrado2.kill();
-				this.meteoroCerto.kill();
-				this.textCorreto.kill();
-				this.textErrado1.kill();
-				this.textErrado2.kill();
-				this.somRespostaErrada.play();
-				this.criaMeteoros();
-			}else if(this.meteoros.y > 480 && this.vidas <= 0) {				
+				this.wrongMeteor1.kill();
+				this.wrongMeteor2.kill();
+				this.rightMeteor.kill();
+				this.rightText.kill();
+				this.wrongText1.kill();
+				this.wrongText2.kill();
+				this.wrongAnswerSound.play();
+				this.createMeteors();
+			} else if (this.meteors.y > 480 && this.lives <= 0) {				
 				this.gameOver();
-			} else if(this.vidas <= 0){				
+			} else if (this.lives <= 0) {
 				this.gameOver();
 			}	
 		}
 	},
 
-	gameOver: function(){
+	gameOver: function () {
+		this.themeSound.stop();
+		this.gameOverSound.play(null, null, 0.2, null, null);
 
-		this.somTema.stop();
-		this.somGameOver.play(null, null, 0.2, null, null);
-
-		if (inclinaCelular){
-			window.removeEventListener('deviceorientation', this.chamaHandlerOrientation, true);			
+		if (tiltPhone) {
+			window.removeEventListener('deviceorientation', this.callOrientationHandler, true);			
 		}		
 			
-		this.velocidadeMovimentacaoMeteoros = 0.5;
+		this.meteorMovementVelocity = 0.5;
 		starMath.state.start('Game-over');
 	},
 
-	movimentaMeteoros: function(){
-		this.meteoros.y += this.velocidadeMovimentacaoMeteoros;			
-		this.textCorreto.y +=  this.velocidadeMovimentacaoMeteoros;
-		this.textErrado1.y += this.velocidadeMovimentacaoMeteoros;
-		this.textErrado2.y += this.velocidadeMovimentacaoMeteoros;
+	moveMeteors: function(){
+		this.meteors.y += this.meteorMovementVelocity;			
+		this.rightText.y +=  this.meteorMovementVelocity;
+		this.wrongText1.y += this.meteorMovementVelocity;
+		this.wrongText2.y += this.meteorMovementVelocity;
 	},
 
-	incrementaVelocidade: function(){
-		this.velocidadeMovimentacaoMeteoros += this.INCREMENTO_DE_VELOCIDADE;		
+	increaseVelocity: function(){
+		this.meteorMovementVelocity += this.VELOCITY_INCREASE;		
 	},
 
-	aumentaRangeOperacoes : function() {
-		this.maxRangeOperacao += 1;		
+	increaseOperationsRange : function() {
+		this.operationMaxRange += 1;		
   	},
 
-  	criaExplosao : function(meteoro){
-
- 		this.somExplosao.play();
- 		this.explosaoImg =  this.add.sprite(this.navinha.x, this.navinha.y, 'explosao');
+  	createExplosion : function(meteor){
+ 		this.explosionSound.play();
+ 		this.explosionImg =  this.add.sprite(this.ship.x, this.ship.y, 'explosion');
  		
  		this.time.events.add(400, function(){
- 			this.explosaoImg.kill(); 			
+ 			this.explosionImg.kill(); 			
  		}, this);
 
  	},
 
- 	colisaoNaveMeteoroCerto : function(navinha, meteoro){
- 		this.criaExplosao();
+ 	shipRightMeteorCollision : function(ship, meteor){
+ 		this.createExplosion();
  		
- 		meteoro.kill();	
- 		this.meteoroErrado1.kill();
- 		this.meteoroErrado2.kill();
+ 		meteor.kill();	
+ 		this.wrongMeteor1.kill();
+ 		this.wrongMeteor2.kill();
 
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();		
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();		
 
-		this.alteraPergunta();
-		this.criaMeteoros();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
+		this.changeQuestion();
+		this.createMeteors();
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 		
-		if (pontuacao >= 10){
-			pontuacao -= 10;
-			this.textoPontuacao.text = pontuacao;
-		}
-
-		this.checkGameOver();	
-
-  	},
-
-  	colisaoNaveMeteoroErrado1 : function(navinha, meteoro){
- 		this.criaExplosao();
-
- 		meteoro.kill();	
- 		this.meteoroCerto.kill()
- 		this.meteoroErrado2.kill();
-
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
-
-		this.alteraPergunta();
-		this.criaMeteoros();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
-
-		if (pontuacao >= 10){
-			pontuacao -= 10;
-			this.textoPontuacao.text = pontuacao;
-		}
-
-		this.checkGameOver();	
-  	}, 
-  	colisaoNaveMeteoroErrado2 : function(navinha, meteoro){
- 		this.criaExplosao(); 	
-
- 		meteoro.kill();	
- 		this.meteoroCerto.kill();
- 		this.meteoroErrado1.kill();
-
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
-
-		this.alteraPergunta();
-		this.criaMeteoros();
-
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
-
-		if (pontuacao >= 10){
-			pontuacao -= 10;
-			this.textoPontuacao.text = pontuacao;
+		if (score >= 10){
+			score -= 10;
+			this.textScore.text = score;
 		}
 
 		this.checkGameOver();	
   	},
-  	criaMeta : function(){
 
-		this.textoMeta = this.add.text(this.world.centerX - 125, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.PONTUACAO_VITORIA + ' pontos!',{
+  	shipWrongMeteorCollision1 : function (ship, meteor) {
+ 		this.createExplosion();
+
+ 		meteor.kill();	
+ 		this.rightMeteor.kill()
+ 		this.wrongMeteor2.kill();
+
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
+
+		this.changeQuestion();
+		this.createMeteors();
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
+
+		if (score >= 10){
+			score -= 10;
+			this.textScore.text = score;
+		}
+
+		this.checkGameOver();	
+	}, 
+	  
+  	shipWrongMeteorCollision2 : function (ship, meteor) {
+ 		this.createExplosion(); 	
+
+ 		meteor.kill();	
+ 		this.rightMeteor.kill();
+ 		this.wrongMeteor1.kill();
+
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
+
+		this.changeQuestion();
+		this.createMeteors();
+
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
+
+		if (score >= 10){
+			score -= 10;
+			this.textScore.text = score;
+		}
+
+		this.checkGameOver();	
+	},
+	  
+  	createFinishLine : function () {
+		this.finishLineText = this.add.text(this.world.centerX - 125, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.VICTORY_SCORE + ' pontos!',{
 			font: '30px Arial',
 			fill: '#ffffff',
 			align: 'center'
 		});
 
-		this.textoMeta.alpha = 1;
+		this.finishLineText.alpha = 1;
 
-		this.time.events.add(3000, function(){ //exibe o texto por 3s antes de iniciar o fade-out
-			this.add.tween(this.textoMeta).to( {alpha: 0}, 3000, "Linear", true); //efeito fade-out de 3s (3000ms) para o texto
+		this.time.events.add(3000, function(){ // show the text for 3s before starting fade-out
+			this.add.tween(this.finishLineText).to( {alpha: 0}, 3000, "Linear", true); // 3s (3000ms) fade-out effect for text
 			
-			this.time.events.add(3000, function(){ //espera o fade-out completar antes de destruir o texto
-				this.textoMeta.kill();
+			this.time.events.add(3000, function(){ // wait for fade-out to complete before destroying the text
+				this.finishLineText.kill();
 
 			}, this);
 		}, this);
-
 	}
 };
