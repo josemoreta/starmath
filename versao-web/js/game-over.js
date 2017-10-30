@@ -2,11 +2,9 @@ var GameOver = {
 	preload: function(){
 		this.load.image('buttonMenu','resources/images/button-menu.png');
 		this.load.image('backgroundGameOver', 'resources/images/background-game-over.png');
-
 	},
 
-	create: function(){
-		 	
+	create: function(){	
  		this.add.sprite(0, 0, 'backgroundGameOver');
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 110, 'startButton', this.playAgain, this);
 		this.add.button(this.world.centerX - (245/2), this.world.centerY - 50, 'menuButton', this.backToMenu, this);

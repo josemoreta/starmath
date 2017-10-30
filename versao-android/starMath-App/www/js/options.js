@@ -1,11 +1,11 @@
 var Options = {
 	preload: function(){
-		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');		
-		this.load.image('menuButton', 'recursos/imagens/button-menu.png');
-		this.load.image('controlsArrowButton', 'recursos/imagens/direita.png');
+		this.load.image('backgroundGameOver', 'resources/imagens/background-game-over.png');		
+		this.load.image('menuButton', 'resources/imagens/button-menu.png');
+		this.load.image('controlsArrowButton', 'resources/imagens/right.png');
 	},
 
-	create: function(){
+	create: function() {
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
 
 		this.add.sprite(0, 0, 'backgroundGameOver');		
@@ -13,23 +13,22 @@ var Options = {
 		this.add.button(this.world.centerX - (245/2) + 30, this.world.centerY - 100, 'controlsArrowButton', this.controlsArrow, this);
 		
 		this.controlsText = this.add.text(this.world.centerX - 130, this.world.centerY - 130, 'Controles: Botões', {
-				font: "20px Arial",
-		        fill: "#ffffff",
-		        align: "left"
-			});
+			font: "20px Arial",
+			fill: "#ffffff",
+			align: "left"
+		});
 	},	
 	
-	backToMenu: function(){
+	backToMenu: function() {
 		starMath.state.start('Menu');
 	},
 
-	controlsArrow: function(){
+	controlsArrow: function() {
 		tiltPhone = !tiltPhone;
-		if(tiltPhone){
+		if (tiltPhone) {
 			this.controlsText.text = 'Controles: Inclinação do Aparelho';
 		} else {
 			this.controlsText.text = 'Controles: Botões';			
 		}
 	}
-
 };

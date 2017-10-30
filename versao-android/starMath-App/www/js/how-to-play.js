@@ -1,16 +1,14 @@
 var HowToPlay = {
-	
-	preload: function(){
-		this.load.image('background', 'recursos/imagens/background-game-over.png');
-		this.load.image('buttonMenu', 'recursos/imagens/button-menu.png');
+	preload: function() {
+		this.load.image('background', 'resources/imagens/background-game-over.png');
+		this.load.image('buttonMenu', 'resources/imagens/button-menu.png');
 		
 	},
 
-	create: function(){
-		
+	create: function() {
 		this.add.sprite(0, 0, 'background');
 
-		this.textoMeta = this.add.text(50, 50, 'Atire no meteoro certo para ganhar pontos. Utilize os botões na parte inferior da tela ou a inclinação do celular.',{
+		this.finishLineText = this.add.text(50, 50, 'Atire no meteoro certo para ganhar pontos. Utilize os botões na parte inferior da tela ou a inclinação do celular.',{
 			font: '30px Arial',
 			fill: '#ffffff',
 			align: 'center',
@@ -21,8 +19,7 @@ var HowToPlay = {
 		this.add.button(this.world.centerX - (245/2), this.world.centerY + 120, 'buttonMenu', this.backToMenu, this);		
 	},
 	
-	backToMenu: function(){
+	backToMenu: function() {
 		starMath.state.start('Menu');
 	}
-
 };

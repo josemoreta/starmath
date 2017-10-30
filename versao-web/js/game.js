@@ -3,7 +3,6 @@ var level;
 var infinityMode;
 
 var Game = {
-
 	VELOCITY_INCREASE : 0.085,
 	VICTORY_SCORE: 200,
 
@@ -57,7 +56,7 @@ var Game = {
 		this.createMeteors();
 	},
 
-	update: function(){
+	update: function() {
 		this.updates();
 
 		this.meteorsMovement();		
@@ -75,7 +74,7 @@ var Game = {
 		this.checkGameOver();
 	},
 
-	loadResources : function (){
+	loadResources : function () {
 
 		this.load.audio('shotSound', ['resources/audio/shotSound.mp3', 'resources/audio/shotSound.ogg']);
 		this.load.audio('rightAnswerSound', ['resources/audio/rightAnswerSound.mp3', 'resources/audio/rightAnswerSound.ogg']);
@@ -94,7 +93,7 @@ var Game = {
 
 	},
 
-	createScenarioAndBackgroud : function (){
+	createScenarioAndBackgroud : function () {
 		this.scenario = this.add.tileSprite(0, 60, 800, 600, 'scenario'); // x, y, width, heigth, key
 		this.heart = this.add.sprite(this.world.centerX - 385, this.world.centerY - 295, 'heart');
 		//parameter 0.3 is for volume, true is to reproduce in loop
@@ -103,7 +102,7 @@ var Game = {
 	},
 
 	// Function to avoid that some audion is executed before being loaded to its variable
-	loadAudios : function (){
+	loadAudios : function () {
 		this.themeSound = this.add.audio('themeSound');
 		this.shotSound = this.add.audio('shotSound');
 		this.rightAnswerSound = this.add.audio('rightAnswerSound');
@@ -114,13 +113,13 @@ var Game = {
 
 	},
 
-	createShip : function (){
+	createShip : function () {
 		this.ship = this.add.sprite(this.world.centerX, this.world.centerY + 175, 'ship');
 		this.physics.enable(this.ship, Phaser.Physics.ARCADE); // apply physics (object, system)
 		this.controls = this.input.keyboard.createCursorKeys(); // returns an object -> up, down, left, right
 	},
 
-	createExplosion : function(meteor){
+	createExplosion : function(meteor) {
 
 		this.explosionSound.play();
 		this.explosionImg =  this.add.sprite(this.ship.x, this.ship.y, 'explosion');
@@ -157,12 +156,9 @@ var Game = {
 
 			}, this);
 		}, this);
-
 	},
 
-
-	createShots : function (){
-
+	createShots : function () {
 		this.shootingSpeed = 0;
 
 		this.shot = this.add.group();
@@ -181,7 +177,7 @@ var Game = {
 		this.shootingButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	},
 
-	createMeteors : function (){
+	createMeteors : function () {
 		// resets group position on y axis
 		this.meteors.y = 0;
 
@@ -199,7 +195,6 @@ var Game = {
 			align: "center" });
 		this.rightText.anchor.set(0.5, 0.5);
 
-
 		this.wrongMeteor1 = this.meteors.create(this.positions[1], 76, 'meteor');
 		this.wrongMeteor1.anchor.setTo(0.5, 0.5);
 		this.wrongText1 = this.add.text(this.wrongMeteor1.x, this.wrongMeteor1.y + 3, this.rightAnswer - this.getRandomInt(1,7), { 
@@ -211,7 +206,6 @@ var Game = {
 			wordWrapWidth: this.wrongMeteor1.width,
 			align: "center" });	
 		this.wrongText1.anchor.set(0.5, 0.5);
-
 
 		this.wrongMeteor2 = this.meteors.create(this.positions[2], 76, 'meteor');
 		this.wrongMeteor2.anchor.setTo(0.5, 0.5);
@@ -226,7 +220,7 @@ var Game = {
 		this.wrongText2.anchor.set(0.5, 0.5);
 	},
 
-	whenRightCollisionHappens : function (shotHit, meteor){
+	whenRightCollisionHappens : function (shotHit, meteor) {
 		shotHit.kill();
 		meteor.kill();	
 		this.wrongMeteor1.kill();
@@ -251,7 +245,7 @@ var Game = {
 		}
 	},
 
-	whenWrongCollisionHappens : function (shotHit, meteor){
+	whenWrongCollisionHappens : function (shotHit, meteor) {
 		shotHit.kill();
 		meteor.kill();	
 		
@@ -270,7 +264,7 @@ var Game = {
 		this.lives--;
 		this.livesText.text = this.lives;
 
-		if (score >= 10){
+		if (score >= 10) {
 			score -= 10;
 			this.scoreText.text = score;
 		}
@@ -278,7 +272,7 @@ var Game = {
 		this.checkGameOver();
 	},
 
-	collisionShipRightMeteor : function(ship, meteor){
+	collisionShipRightMeteor : function(ship, meteor) {
 		this.createMeteors();
 
 		meteor.kill();	
@@ -295,7 +289,7 @@ var Game = {
 		this.lives--;
 		this.livesText.text = this.lives;
 
-		if (score >= 10){
+		if (score >= 10) {
 			score -= 10;
 			this.scoreText.text = score;
 		}
@@ -303,7 +297,7 @@ var Game = {
 		this.checkGameOver();	
 	},
 
-	collisionShipWrongMeteor1 : function(ship, meteor){
+	collisionShipWrongMeteor1 : function(ship, meteor) {
 		this.createMeteors(); 		
 
 		meteor.kill();	
@@ -328,7 +322,7 @@ var Game = {
 		this.checkGameOver();
 	},
 
-	collisionShipWrongMeteor1 : function(ship, meteor){
+	collisionShipWrongMeteor1 : function(ship, meteor) {
 		this.createMeteors(); 	
 
 		meteor.kill();	
@@ -354,7 +348,6 @@ var Game = {
 	},
 
 	changeQuestion : function (){
-		
 		var op = this.getRandomInt(1, level);
 		var a = this.getRandomInt(1, this.maxRangeOperation);
 		var b = this.getRandomInt(1, this.maxRangeOperation);
@@ -389,15 +382,14 @@ var Game = {
 		}
 	},
 
-	updates : function (){
-
+	updates : function () {
 		this.scenario.tilePosition.y += this.scenarioScrollVelocity;
 		
 		//reset to 0
 		this.ship.body.velocity.x = 0;
 		
 		if(this.shootingButton.isDown){
-			this.atira();	
+			this.shoot();	
 		}
 
 		if(this.controls.left.isDown && this.ship.body.x > 0){
@@ -409,8 +401,7 @@ var Game = {
 		}
 	},
 
-	atira : function (){
-		
+	shoot: function () {
 		this.oneShot = this.shot.getFirstExists(false);
 		this.shotSound.play();
 
@@ -426,7 +417,7 @@ var Game = {
 		}
 	},
 
-	getMeteorsPosition : function (){
+	getMeteorsPosition: function () {
 		this.positions = [
 		this.getRandomInt(10, 670),	
 		this.getRandomInt(10, 670),
@@ -447,8 +438,9 @@ var Game = {
 		this.shuffle();
 		
 	},
+
 	// shuffles the positions array
-	shuffle : function () {
+	shuffle: function () {
 		var j, x, i;
 		for (i = this.positions.length; i; i--) {
 			j = Math.floor(Math.random() * i);
@@ -458,11 +450,11 @@ var Game = {
 		}
 	},
 
-	getRandomInt : function (min, max) {
+	getRandomInt: function (min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
-	checkGameOver : function (){
+	checkGameOver: function (){
 		if (this.meteors.y > 550 && this.lives > 0) { //detects when meteors aren't hit
 			this.lives--;
 			this.livesText.text = this.lives;
@@ -472,7 +464,7 @@ var Game = {
 			this.wrongAnswerSound.play();
 			this.createMeteors();
 
-		} else if(this.lives == 0) {
+		} else if (this.lives == 0) {
 			this.themeSound.stop();
 			this.gameOverSound.play(null, null, 0.2, null, null); //The parameter 0.2 on .play function is the audio volume
 			this.gameOver();
@@ -481,18 +473,18 @@ var Game = {
 	},
 
 	//calls the game over canvas
-	gameOver : function () {
+	gameOver: function () {
 		this.state.start('Game-over');
 	},
 
-	meteorsMovement : function (){
+	meteorsMovement: function () {
 		this.meteors.y += this.meteorMovementVelocity;
 		this.rightText.y += this.meteorMovementVelocity;
 		this.wrongText1.y += this.meteorMovementVelocity;
 		this.wrongText2.y += this.meteorMovementVelocity;
 	},
 
-	velocityIncrease : function(){
+	velocityIncrease: function(){
 		if (infinityMode) {
 			// reduces the increase velocity in infinity mode so that the game lasts longer
 			// (too sleepy to think of a better logic)

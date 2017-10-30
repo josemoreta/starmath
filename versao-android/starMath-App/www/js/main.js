@@ -4,7 +4,7 @@ starMath.state.add('Game-over', GameOver);
 starMath.state.add('Options', Options);
 starMath.state.add('HowToPlay', HowToPlay);
 starMath.state.add('Levels', ChooseLevels);
-starMath.state.add('Vitoria', Vitoria);
+starMath.state.add('Victory', Victory);
 
 starMath.state.start('Menu');
 

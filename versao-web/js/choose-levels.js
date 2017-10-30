@@ -10,7 +10,6 @@ var ChooseLevels = {
 	},
 
 	create: function(){
-		
 		this.add.sprite(0, 0, 'backgroundHomeScreen');
 		
 		this.add.button(this.world.centerX - 140, this.world.centerY - 50, 'imgLevel1', this.additionLevel, this);
@@ -26,7 +25,6 @@ var ChooseLevels = {
 		});
 
 		this.add.button(this.world.centerX - 120, this.world.centerY + 150, 'buttonMenu', this.backToMenu, this);
-
 	},
 
 	additionLevel : function() {

@@ -1,13 +1,13 @@
 var Menu = {
-	preload: function(){
-		this.load.image('startButton', 'recursos/imagens/botao-jogar.png');
-		this.load.image('optionsButton', 'recursos/imagens/botao-opcoes.png');
-		this.load.image('howToPlayButton', 'recursos/imagens/botao-como-jogar.png');
-		this.load.image('rankingButton', 'recursos/imagens/botao-ranking.png');
-		this.load.image('backgroundHomeScreen', 'recursos/imagens/background-tela-inicial.png');
+	preload: function() {
+		this.load.image('startButton', 'resources/imagens/button-play.png');
+		this.load.image('optionsButton', 'resources/imagens/button-options.png');
+		this.load.image('howToPlayButton', 'resources/imagens/button-how-to-play.png');
+		this.load.image('rankingButton', 'resources/imagens/button-ranking.png');
+		this.load.image('backgroundHomeScreen', 'resources/imagens/background-home-screen.png');
 	},
 
-	create: function(){
+	create: function() {
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
 
 		this.add.sprite(0, 0, 'backgroundHomeScreen');
@@ -17,19 +17,19 @@ var Menu = {
 		//this.add.button(this.world.centerX - (245/2), this.world.centerY + 70, 'rankingButton', this.startRanking, this);
 	},
 
-	startGame: function(){
+	startGame: function() {
 		this.state.start('Levels');
 	},
 
-	startOptions: function(){
+	startOptions: function() {
 		this.state.start('Options');
 	},
 
-	startRanking: function(){
+	startRanking: function() {
 		//this.state.start('Ranking');
 	},
 
-	startTutorial: function(){
+	startTutorial: function() {
 		this.state.start('HowToPlay');
 	}
 };

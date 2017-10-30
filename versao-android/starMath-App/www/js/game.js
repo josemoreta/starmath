@@ -4,7 +4,7 @@ var level;
 
 var Game = {	
 	VICTORY_SCORE: 200,
-	INCREMENTO_DE_VELOCIDADE : 0.060,
+	VELOCITY_INCREASE : 0.060,
 	goingLeft: false,
 	goingRight: false,
 	shooting: false,
@@ -12,7 +12,7 @@ var Game = {
 	shipDeviceOrientationDistance: 125,
 
 	preload: function(){
-		this.carregaRecursos();
+		this.loadResources();
 	},
 
 	create: function(){
@@ -34,14 +34,13 @@ var Game = {
 			this.createShots();
 			this.createFinishLine();
 
-			/*Device orientado, 
-				API para detectar inclinações do celular e movimentar a nave
-				*/
-			if (tiltPhone){
+			/* Oriented device,
+				API ro detect phone tilts and to move the ship */
+			if (tiltPhone) {
 				window.addEventListener("deviceorientation", this.callOrientationHandler , true);				
 			}			
 
-			//Texto
+			// Text
 			this.questionText = this.add.text(this.world.centerX - 175, this.world.centerY - 300, '', {
 				font: "40px Arial",
 		        fill: "#ffffff",
@@ -56,30 +55,30 @@ var Game = {
 				align: 'center'
 			});
 
-			// Meteoros com a resposta
-			this.meteoros = this.add.group();
-			this.meteoros.enableBody = true;
-			this.meteoros.physicsBodyType = Phaser.Physics.ARCADE;
+			// Meteors with the answer
+			this.meteors = this.add.group();
+			this.meteors.enableBody = true;
+			this.meteors.physicsBodyType = Phaser.Physics.ARCADE;
 			this.createMeteors();
 	},
 
 	update: function(){
 		this.updates();
-		// Faz meteoros descer (O GRUPO)		
+		// Make meteors go down (THE GROUP)		
 
 		this.moveMeteors();		
 
-		if(this.goingRight && this.ship.body.x < 296){
+		if (this.goingRight && this.ship.body.x < 296) {
 			this.ship.body.velocity.x = this.shipButtonDistance;
 		} else if(this.goingLeft && this.ship.body.x > 0){		
 			this.ship.body.velocity.x = this.shipButtonDistance * -1;
 		}
 
-		// Identificando colisão para cada um dos meteoros
-			// objetos que recebem colisao, funcao, 
-		this.physics.arcade.overlap(this.tiro, this.rightMeteor, this.whenRightCollisionHappens, null, this);
-		this.physics.arcade.overlap(this.tiro, this.wrongMeteor1, this.whenWrongCollisionHappens, null, this);
-		this.physics.arcade.overlap(this.tiro, this.wrongMeteor2, this.whenWrongCollisionHappens, null, this);
+		// Identifying the collision for each meteor
+		// objects that receive collision, function 
+		this.physics.arcade.overlap(this.shot, this.rightMeteor, this.whenRightCollisionHappens, null, this);
+		this.physics.arcade.overlap(this.shot, this.wrongMeteor1, this.whenWrongCollisionHappens, null, this);
+		this.physics.arcade.overlap(this.shot, this.wrongMeteor2, this.whenWrongCollisionHappens, null, this);
 
 		this.physics.arcade.overlap(this.ship, this.rightMeteor, this.shipRightMeteorCollision, null, this);
 		this.physics.arcade.overlap(this.ship, this.wrongMeteor1, this.shipWrongMeteorCollision1, null, this);
@@ -88,41 +87,41 @@ var Game = {
 		this.checkGameOver();
 	},
 
-	carregaRecursos : function (){
-		this.load.image('scenario', 'recursos/imagens/cenario.png');
-		this.load.image('ship', 'recursos/imagens/navinha.png');
-		this.load.image('umTiro', 'recursos/imagens/tiro.png');
-		this.load.image('meteoro', 'recursos/imagens/meteoro.png');
-		this.load.image('coracao', 'recursos/imagens/coracao.png');
-		this.load.image('explosao', 'recursos/imagens/explosao.png');
+	loadResources : function (){
+		this.load.image('scenario', 'resources/imagens/scenario.png');
+		this.load.image('ship', 'resources/imagens/ship.png');
+		this.load.image('oneShot', 'resources/imagens/shot.png');
+		this.load.image('meteor', 'resources/imagens/meteor.png');
+		this.load.image('heart', 'resources/imagens/heart.png');
+		this.load.image('explosion', 'resources/imagens/explosion.png');
 
-		this.load.image('botaoEsquerda', 'recursos/imagens/esquerda.png');
-		this.load.image('botaoDireita', 'recursos/imagens/direita.png');
-		this.load.image('botaoAtira', 'recursos/imagens/atira.png');
+		this.load.image('leftButton', 'resources/imagens/left.png');
+		this.load.image('rightButton', 'resources/imagens/right.png');
+		this.load.image('shootButton', 'resources/imagens/shoot.png');
 
-		this.load.audio('somTiro',  'recursos/audio/somTiro.ogg');
-		this.load.audio('rightAnswerSound', 'recursos/audio/somRespostaCerta.ogg');
-		this.load.audio('wrongAnswerSound',  'recursos/audio/somRespostaErrada.ogg');
- 		this.load.audio('gameOverSound',  'recursos/audio/somGameOver.ogg');
- 		this.load.audio('themeSound',  'recursos/audio/somTema.ogg');
- 		this.load.audio('victorySound', 'recursos/audio/somVitoria.ogg');
- 		this.load.audio('explosionSound', 'recursos/audio/somExplosao.ogg');
+		this.load.audio('shotSound',  'resources/audio/shootSound.ogg');
+		this.load.audio('rightAnswerSound', 'resources/audio/rightAnswerSound.ogg');
+		this.load.audio('wrongAnswerSound',  'resources/audio/wrongAnswerSound.ogg');
+ 		this.load.audio('gameOverSound',  'resources/audio/gameOverSound.ogg');
+ 		this.load.audio('themeSound',  'resources/audio/themeSound.ogg');
+ 		this.load.audio('victorySound', 'resources/audio/victorySound.ogg');
+ 		this.load.audio('explosionSound', 'resources/audio/explosionSound.ogg');
 	},
 
 	createBackgroundScenario: function (){
-		// refatorar tamanho do cenario aqui
-		if (tiltPhone){
+		// refactor scenario size here
+		if (tiltPhone) {
 			this.scenario = this.add.tileSprite(0, 48, 800, 600, 'scenario'); // x, y, width, heigth, key
 		} else {
 			this.scenario = this.add.tileSprite(0, 48, 800, 500, 'scenario'); // x, y, width, heigth, key			
 		}
 
-		this.coracao = this.add.sprite(this.world.centerX + 25, this.world.centerY - this.world.centerY, 'coracao');
-		this.velocidadeScrollCenario = 2;
+		this.heart = this.add.sprite(this.world.centerX + 25, this.world.centerY - this.world.centerY, 'heart');
+		this.scenarioScrollVelocity = 2;
 		this.themeSound.play(null, null, 0.5, true, null);
 
-		this.vidas = 3;
-		this.textoVidas = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.vidas,{
+		this.lives = 3;
+		this.livesText = this.add.text(this.world.centerX + 45, this.world.centerY - this.world.centerY + 14, this.lives,{
 			font: '18px Arial',
 			fill: '#ffffff',
 			align: 'center'
@@ -130,75 +129,68 @@ var Game = {
 	},
 
 	createShip: function (){
-		
-		if(tiltPhone){
+		if (tiltPhone){
 			this.ship = this.add.sprite(this.world.centerX, this.world.centerY + 175, 'ship');			
 		} else {
 			this.ship = this.add.sprite(this.world.centerX, this.world.centerY + 120, 'ship');						
 			
-			this.botaoDireita = this.add.button(this.world.centerX * 2 - 64, this.world.centerY * 2 - 50, 'botaoDireita');		
-			this.botaoDireita.onInputDown.add(function(){
+			this.rightButton = this.add.button(this.world.centerX * 2 - 64, this.world.centerY * 2 - 50, 'rightButton');		
+			this.rightButton.onInputDown.add(function(){
 				this.goingRight = true;			
 			}, this);
-			this.botaoDireita.onInputUp.add(function(){
+			this.rightButton.onInputUp.add(function(){
 				this.goingRight = false;			
 			}, this);
 
-
-			this.botaoEsquerda = this.add.button(0, this.world.centerY * 2 - 50, 'botaoEsquerda');
-			this.botaoEsquerda.onInputDown.add(function(){
+			this.leftButton = this.add.button(0, this.world.centerY * 2 - 50, 'leftButton');
+			this.leftButton.onInputDown.add(function(){
 				this.goingLeft = true;			
 			}, this);
-			this.botaoEsquerda.onInputUp.add(function(){
+			this.leftButton.onInputUp.add(function(){
 				this.goingLeft = false;			
 			}, this);			
 		}
 
-		this.physics.enable(this.ship, Phaser.Physics.ARCADE); // aplicar físicas (object, system)
-		
+		this.physics.enable(this.ship, Phaser.Physics.ARCADE); // apply physics (object, system)
 	},
-
 	
 	createShots: function (){
 
-		this.tiroVelocidade = 0;
+		this.shootingSpeed = 0;
 
-		this.somTiro = this.add.audio('somTiro');
+		this.shotSound = this.add.audio('shotSound');
 		
-		this.tiro = this.add.group();
-		// Faz com que os objetos do grupo tenham um 'corpo' e em seguida seta o sistema de fisica aplicado a esses corpos
-		this.tiro.enableBody = true;
-		this.tiro.physicsBodyType = Phaser.Physics.ARCADE;
-		// Cria um grupo de 30 sprites usando a imagem da key fornecida
-		this.tiro.createMultiple(30, 'umTiro');
-		// Posiçao do tiro no bico da nave   ---- Altura em que o tiro sai, pra sair da boca da nave e não do meio da tela
-		this.tiro.setAll('anchor.x', -0.9);
-		this.tiro.setAll('anchor.y', 0.8);
-		// Faz o objeto ser killado após sair da tela chamando automaticamente a função inWorld que retorna false	
-		this.tiro.setAll('outOfBoundsKill', true);
-		this.tiro.setAll('checkWorldBounds', true);
+		this.shot = this.add.group();
+		// Makes that objects of the groups have a 'body' and sets the physics system applied to those bodies
+		this.shot.enableBody = true;
+		this.shot.physicsBodyType = Phaser.Physics.ARCADE;
+		// Creates a group of 30 sprites using the supplied key image
+		this.shot.createMultiple(30, 'oneShot');
+		// Shot position on tip of the ship --- Height the shot comes from, to leave the tip of the ship and not the middle of the canvar
+		this.shot.setAll('anchor.x', -0.9);
+		this.shot.setAll('anchor.y', 0.8);
+		// Makes the object get killed after leaving the canvas, automatically calling the inWorld function which returns false
+		this.shot.setAll('outOfBoundsKill', true);
+		this.shot.setAll('checkWorldBounds', true);
 
 		if (tiltPhone){
-			this.touchAtirar = this.input.pointer1;			
+			this.touchShoot = this.input.pointer1;			
 		} else {
-			this.botaoAtirar = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 50, 'botaoAtira', function(){
-				this.atira();
+			this.shootButton = this.add.button(this.world.centerX - 15, this.world.centerY * 2 - 50, 'shootButton', function(){
+				this.shoot();
 			}, this);
-			
 		}
-
 	},
 
-
 	createMeteors: function (){
-		// reseta posição do gurpo no eixo y
-		this.meteoros.y = 0;
+		// resets group position on y axis
+		this.meteors.y = 0;
 
-		this.getPosicaoMeteoros();
+		this.getMeteorsPosition();
 
-		this.rightMeteor = this.meteoros.create(this.posicoes[0], 65,'meteoro');
+		this.rightMeteor = this.meteors.create(this.posicoes[0], 65,'meteor');
 		this.rightMeteor.anchor.setTo(0.5,0.5);		
-	    this.textCorreto = this.add.text(this.rightMeteor.x, this.rightMeteor.y, this.respostaCorreta, { 
+	    this.rightText = this.add.text(this.rightMeteor.x, this.rightMeteor.y, this.rightAnswer, { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
@@ -206,12 +198,11 @@ var Game = {
 	    	wordWrap: true,
 	    	wordWrapWidth: this.rightMeteor.width,
 	    	align: "center" });
-	    this.textCorreto.anchor.set(0.5, 0.5);
+	    this.rightText.anchor.set(0.5, 0.5);
 	    
-
-		this.wrongMeteor1 = this.meteoros.create(this.posicoes[1], 65, 'meteoro');
+		this.wrongMeteor1 = this.meteors.create(this.posicoes[1], 65, 'meteor');
 		this.wrongMeteor1.anchor.setTo(0.5, 0.5);
-		this.textErrado1 = this.add.text(this.wrongMeteor1.x, this.wrongMeteor1.y, this.respostaCorreta - this.getRandomInt(1,7), { 
+		this.wrongText1 = this.add.text(this.wrongMeteor1.x, this.wrongMeteor1.y, this.rightAnswer - this.getRandomInt(1,7), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
@@ -219,12 +210,11 @@ var Game = {
 	    	wordWrap: true,
 	    	wordWrapWidth: this.wrongMeteor1.width,
 	    	align: "center" });	
-		this.textErrado1.anchor.set(0.5, 0.5);
+		this.wrongText1.anchor.set(0.5, 0.5);
 
-
-		this.wrongMeteor2 = this.meteoros.create(this.posicoes[2], 65, 'meteoro');
+		this.wrongMeteor2 = this.meteors.create(this.posicoes[2], 65, 'meteor');
 		this.wrongMeteor2.anchor.setTo(0.5, 0.5);
-		this.textErrado2 = this.add.text(this.wrongMeteor2.x, this.wrongMeteor2.y, this.respostaCorreta - this.getRandomInt(1,3), { 
+		this.wrongText2 = this.add.text(this.wrongMeteor2.x, this.wrongMeteor2.y, this.rightAnswer - this.getRandomInt(1,3), { 
 	    	font: "20px Arial",
 	    	fill: "#ffffff",
 	    	stroke: "000",
@@ -232,96 +222,88 @@ var Game = {
 	    	wordWrap: true,
 	    	wordWrapWidth: this.wrongMeteor2.width,
 	    	align: "center" });
-		this.textErrado2.anchor.set(0.5, 0.5);
-
-
+		this.wrongText2.anchor.set(0.5, 0.5);
 	},
 
-	whenRightCollisionHappens: function (tiroQueAcertou, meteoro){
-		tiroQueAcertou.kill();
-		meteoro.kill();	
+	whenRightCollisionHappens: function (shotHit, meteor){
+		shotHit.kill();
+		meteor.kill();	
 		this.wrongMeteor1.kill();
 		this.wrongMeteor2.kill();
-		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
+		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
 		score += 10;
 		this.textScore.text = score;
 
 		this.rightAnswerSound.play();
-		this.aumentaRangeOperacoes();
+		this.increaseOperationsRange();
 		this.changeQuestion();
-		this.incrementaVelocidade();
+		this.increaseVelocity();
 		this.createMeteors();
 
-		if (score >= this.VICTORY_SCORE){
+		if (score >= this.VICTORY_SCORE) {
 			this.themeSound.stop();
 			this.victorySound.play();
 			starMath.state.start('Victory');
 		}
-
-
 	},
-
 
 	changeQuestion: function (){
 		var op = this.getRandomInt(1, level);
 		var a = this.getRandomInt(1, this.operationMaxRange);
 		var b = this.getRandomInt(1, this.operationMaxRange);
 
-
-		if (op == 1) { //soma
-			this.respostaCorreta = a + b;
+		if (op == 1) { // sum
+			this.rightAnswer = a + b;
 			this.questionText.text = a + '+' + b + " = ?"
-		} else if (op == 2) { //subtração
-
-			//Evita respostas das operações com negativos
+		} else if (op == 2) { // subtraction
+			// Avoid answers from operations with negatives
 			if (a < b) {
 				var temp = a;
 				a = b;
 				b = temp;
 			}
 
-			this.respostaCorreta = a - b;
+			this.rightAnswer = a - b;
 			this.questionText.text = a + '-' + b + " = ?"
-		} else 	if (op == 3) { //multiplicação
+		} else if (op == 3) { // multiplication
 			a = this.getRandomInt(1, 10);
 			b = this.getRandomInt(1, 10);
-			this.respostaCorreta = a * b;
+			this.rightAnswer = a * b;
 			this.questionText.text = a + 'x' + b + " = ?"
-		} else { //divisão -> op == 4
-			//Evita respostas das operações com valores irracionais
-			while(a%b != 0) {
+		} else { // division -> op == 4
+			// Avoid answers from operations with irrational values
+			while (a % b != 0) {
 				a = this.getRandomInt(1, 10);
 				b = this.getRandomInt(1, 10);
 			}
-			this.respostaCorreta = a / b;
+			this.rightAnswer = a / b;
 			this.questionText.text = a + '÷' + b + " = ?"
 		}
 	},
 
-
-	whenWrongCollisionHappens: function (tiroQueAcertou, meteoro){
-		tiroQueAcertou.kill();
-		meteoro.kill();
+	whenWrongCollisionHappens: function (shotHit, meteor) {
+		shotHit.kill();
+		meteor.kill();
 
 		this.rightMeteor.kill();
 		this.wrongMeteor1.kill();
 		this.wrongMeteor2.kill();
 
-		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
+		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
 
 		this.wrongAnswerSound.play();
 
 		this.changeQuestion();
 		this.createMeteors();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 
-		if (score >= 10){
+		if (score >= 10) {
 			score -= 10;
 			this.textScore.text = score;
 		}
@@ -329,81 +311,69 @@ var Game = {
 		this.checkGameOver();
 	},
 
-	updates: function (){
-
-		this.scenario.tilePosition.y += this.velocidadeScrollCenario;
+	updates: function () {
+		this.scenario.tilePosition.y += this.scenarioScrollVelocity;
 		
-
-
-		//resetando para 0
+		// reset to 0
 		this.ship.body.velocity.x = 0;
 
 		if (tiltPhone){
-			if(this.touchAtirar.isDown){
-				this.atira();	
+			if (this.touchShoot.isDown){
+				this.shoot();	
 			}			
 		} //else if (this.shooting){
-			//this.atira();
+			//this.shoot();
 		//}
-
-
 	},
 
-	atira: function (){
-		
-		this.umTiro = this.tiro.getFirstExists(false);
+	shoot: function () {
+		this.oneShot = this.tiro.getFirstExists(false);
 			
-		this.somTiro.play();
-		if(this.time.now > this.tiroVelocidade){
+		this.shotSound.play();
+		if (this.time.now > this.shootingSpeed) {
 			
-			if(this.umTiro){
-				
-				this.umTiro.reset(this.ship.x, this.ship.y);
-				// Quão rápido sobe a bala
-				this.umTiro.body.velocity.y = -200; //pixels por segundo - rate / velocidade
-				// De quanto em quanto tempo sai uma bala
-				this.tiroVelocidade = this.time.now + 300;
+			if (this.oneShot) {
+				this.oneShot.reset(this.ship.x, this.ship.y);
+				// How fast the bullet goes up
+				this.oneShot.body.velocity.y = -200; // pixels per second - rate / velocity
+				// How often a bullet is shot
+				this.shootingSpeed = this.time.now + 300;
 			}
 		}
 	},
 
-
-	getPosicaoMeteoros: function (){
-		this.posicoes  = [
+	getMeteorsPosition: function (){
+		this.positions = [
 			this.getRandomInt(20, 235),
 			this.getRandomInt(20, 235),
 			this.getRandomInt(20, 235)
 		];
 
-
-		this.posicoes.sort(function(a,b){
-			return a-b;
+		this.positions.sort(function(a,b) {
+			return a - b;
 		});
-
 		
-		if(this.posicoes[1] - this.posicoes[0] <= 50){
-			this.posicoes[1] += 50;
+		if (this.positions[1] - this.positions[0] <= 50) {
+			this.positions[1] += 50;
 		}
-		if(this.posicoes[2] - this.posicoes[1] <= 50){
-	 		this.posicoes[2] += 100;	
+		if (this.positions[2] - this.positions[1] <= 50) {
+	 		this.positions[2] += 100;	
  		}
 
  		this.shuffle();
-		// implementar lógica da posição dos meteoros, para que um não sobreponha o outro
-
+		// implement meteors position logic, so that one doesn't overlap the other
 		
 	},
 
 	shuffle: function () {
 	    var j, x, i;
-	    for (i = this.posicoes.length; i; i--) {
+	    for (i = this.positions.length; i; i--) {
 		    j = Math.floor(Math.random() * i);
-		    x = this.posicoes[i - 1];
-		    this.posicoes[i - 1] = this.posicoes[j];
-		    this.posicoes[j] = x;
+		    x = this.positions[i - 1];
+		    this.positions[i - 1] = this.positions[j];
+		    this.positions[j] = x;
 	    }
 	},
-
 
 	getRandomInt: function (min, max) {
 	 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -414,27 +384,25 @@ var Game = {
 	},
 
 	handleOrientation: function (e){
-	
-		/*maior que 1 e menor que -1 apenas para evitar de andar com o celular parado,
-		 	 pois mesmo praticamente parado é detectado inclinações.	 
-		 	 */
+		/* greater than 1 and less than -1 just to avoid moving with the phone stopped,
+		because even when it is stopped some tilts are detected */
 		if (e.gamma >= 1.5 && this.ship.body.x < 296) { 		
 			this.ship.body.velocity.x = this.shipDeviceOrientationDistance;		
-			return; // quebra o fluxo, não executa resto do código
+			return; // break the flow, don't execute the rest of the code
 		}  else if (e.gamma <= -1.5 && this.ship.body.x > 0) {
 			this.ship.body.velocity.x = this.shipDeviceOrientationDistance * -1;
-			return; // quebra o fluxo, não executa resto do código
+			return; // break the flow, don't execute the rest of the code
 		}
 		
-		// só volta pra zero quando não temm inclinação (tilt)
+		// only resets to zero when there is no tilt
 		this.ship.body.velocity.x = 0;		
 	},
 
 	checkGameOver: function(){
-		if(tiltPhone){
-			if (this.meteoros.y > 600 && this.vidas > 0) {
-				this.vidas--;
-				this.textoVidas.text = this.vidas;
+		if (tiltPhone) {
+			if (this.meteors.y > 600 && this.lives > 0) {
+				this.lives--;
+				this.livesText.text = this.lives;
 				if (score >= 10){
 					score -= 10;
 					this.textScore.text = score;
@@ -442,46 +410,45 @@ var Game = {
 				this.wrongMeteor1.kill();
 				this.wrongMeteor2.kill();
 				this.rightMeteor.kill();
-				this.textCorreto.kill();
-				this.textErrado1.kill();
-				this.textErrado2.kill();
+				this.rightText.kill();
+				this.wrongText1.kill();
+				this.wrongText2.kill();
 				this.wrongAnswerSound.play();
 				this.createMeteors();
-			} else if(this.meteoros.y > 600 && this.vidas <= 0) {					
+			} else if (this.meteors.y > 600 && this.lives <= 0) {					
 				this.gameOver();
-			} else if(this.vidas <= 0){				
+			} else if (this.lives <= 0){				
 				this.gameOver();
 			}			
 		} else {
-			if (this.meteoros.y > 480 && this.vidas > 0){
-				this.vidas--;
-				this.textoVidas.text = this.vidas;
-				if (score >= 10){
+			if (this.meteors.y > 480 && this.lives > 0) {
+				this.lives--;
+				this.livesText.text = this.lives;
+				if (score >= 10) {
 					score -= 10;
 					this.textScore.text = score;
 				}
 				this.wrongMeteor1.kill();
 				this.wrongMeteor2.kill();
 				this.rightMeteor.kill();
-				this.textCorreto.kill();
-				this.textErrado1.kill();
-				this.textErrado2.kill();
+				this.rightText.kill();
+				this.wrongText1.kill();
+				this.wrongText2.kill();
 				this.wrongAnswerSound.play();
 				this.createMeteors();
-			}else if(this.meteoros.y > 480 && this.vidas <= 0) {				
+			} else if (this.meteors.y > 480 && this.lives <= 0) {				
 				this.gameOver();
-			} else if(this.vidas <= 0){				
+			} else if (this.lives <= 0) {
 				this.gameOver();
 			}	
 		}
 	},
 
-	gameOver: function(){
-
+	gameOver: function () {
 		this.themeSound.stop();
 		this.gameOverSound.play(null, null, 0.2, null, null);
 
-		if (tiltPhone){
+		if (tiltPhone) {
 			window.removeEventListener('deviceorientation', this.callOrientationHandler, true);			
 		}		
 			
@@ -490,47 +457,46 @@ var Game = {
 	},
 
 	moveMeteors: function(){
-		this.meteoros.y += this.meteorMovementVelocity;			
-		this.textCorreto.y +=  this.meteorMovementVelocity;
-		this.textErrado1.y += this.meteorMovementVelocity;
-		this.textErrado2.y += this.meteorMovementVelocity;
+		this.meteors.y += this.meteorMovementVelocity;			
+		this.rightText.y +=  this.meteorMovementVelocity;
+		this.wrongText1.y += this.meteorMovementVelocity;
+		this.wrongText2.y += this.meteorMovementVelocity;
 	},
 
-	incrementaVelocidade: function(){
-		this.meteorMovementVelocity += this.INCREMENTO_DE_VELOCIDADE;		
+	increaseVelocity: function(){
+		this.meteorMovementVelocity += this.VELOCITY_INCREASE;		
 	},
 
-	aumentaRangeOperacoes : function() {
+	increaseOperationsRange : function() {
 		this.operationMaxRange += 1;		
   	},
 
-  	criaExplosao : function(meteoro){
-
+  	createExplosion : function(meteor){
  		this.explosionSound.play();
- 		this.explosaoImg =  this.add.sprite(this.ship.x, this.ship.y, 'explosao');
+ 		this.explosionImg =  this.add.sprite(this.ship.x, this.ship.y, 'explosion');
  		
  		this.time.events.add(400, function(){
- 			this.explosaoImg.kill(); 			
+ 			this.explosionImg.kill(); 			
  		}, this);
 
  	},
 
- 	shipRightMeteorCollision : function(ship, meteoro){
- 		this.criaExplosao();
+ 	shipRightMeteorCollision : function(ship, meteor){
+ 		this.createExplosion();
  		
- 		meteoro.kill();	
+ 		meteor.kill();	
  		this.wrongMeteor1.kill();
  		this.wrongMeteor2.kill();
 
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();		
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();		
 
 		this.changeQuestion();
 		this.createMeteors();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 		
 		if (score >= 10){
 			score -= 10;
@@ -538,25 +504,24 @@ var Game = {
 		}
 
 		this.checkGameOver();	
-
   	},
 
-  	shipWrongMeteorCollision1 : function(ship, meteoro){
- 		this.criaExplosao();
+  	shipWrongMeteorCollision1 : function (ship, meteor) {
+ 		this.createExplosion();
 
- 		meteoro.kill();	
+ 		meteor.kill();	
  		this.rightMeteor.kill()
  		this.wrongMeteor2.kill();
 
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
 
 		this.changeQuestion();
 		this.createMeteors();
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 
 		if (score >= 10){
 			score -= 10;
@@ -564,24 +529,25 @@ var Game = {
 		}
 
 		this.checkGameOver();	
-  	}, 
-  	shipWrongMeteorCollision2 : function(ship, meteoro){
- 		this.criaExplosao(); 	
+	}, 
+	  
+  	shipWrongMeteorCollision2 : function (ship, meteor) {
+ 		this.createExplosion(); 	
 
- 		meteoro.kill();	
+ 		meteor.kill();	
  		this.rightMeteor.kill();
  		this.wrongMeteor1.kill();
 
- 		this.textCorreto.kill();
-		this.textErrado1.kill();
-		this.textErrado2.kill();
+ 		this.rightText.kill();
+		this.wrongText1.kill();
+		this.wrongText2.kill();
 
 		this.changeQuestion();
 		this.createMeteors();
 
-		// verifica vidas e chama game-over
-		this.vidas--;
-		this.textoVidas.text = this.vidas;
+		// check lives and call game-over
+		this.lives--;
+		this.livesText.text = this.lives;
 
 		if (score >= 10){
 			score -= 10;
@@ -589,25 +555,24 @@ var Game = {
 		}
 
 		this.checkGameOver();	
-  	},
-  	createFinishLine : function(){
-
-		this.textoMeta = this.add.text(this.world.centerX - 125, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.VICTORY_SCORE + ' pontos!',{
+	},
+	  
+  	createFinishLine : function () {
+		this.finishLineText = this.add.text(this.world.centerX - 125, this.world.centerY, 'Objetivo da missão: \nFaça ' + this.VICTORY_SCORE + ' pontos!',{
 			font: '30px Arial',
 			fill: '#ffffff',
 			align: 'center'
 		});
 
-		this.textoMeta.alpha = 1;
+		this.finishLineText.alpha = 1;
 
-		this.time.events.add(3000, function(){ //exibe o texto por 3s antes de iniciar o fade-out
-			this.add.tween(this.textoMeta).to( {alpha: 0}, 3000, "Linear", true); //efeito fade-out de 3s (3000ms) para o texto
+		this.time.events.add(3000, function(){ // show the text for 3s before starting fade-out
+			this.add.tween(this.finishLineText).to( {alpha: 0}, 3000, "Linear", true); // 3s (3000ms) fade-out effect for text
 			
-			this.time.events.add(3000, function(){ //espera o fade-out completar antes de destruir o texto
-				this.textoMeta.kill();
+			this.time.events.add(3000, function(){ // wait for fade-out to complete before destroying the text
+				this.finishLineText.kill();
 
 			}, this);
 		}, this);
-
 	}
 };

@@ -1,10 +1,10 @@
 var GameOver = {
-	preload: function(){
-		this.load.image('menuButton','recursos/imagens/button-menu.png');
-		this.load.image('backgroundGameOver', 'recursos/imagens/background-game-over.png');
+	preload: function() {
+		this.load.image('menuButton','resources/imagens/button-menu.png');
+		this.load.image('backgroundGameOver', 'resources/imagens/background-game-over.png');
 	},
 
-	create: function(){
+	create: function() {
 		window.plugins.insomnia.allowSleepAgain();
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
  	
@@ -33,15 +33,15 @@ var GameOver = {
 		});
 	},
 
-	saveScore: function(){
+	saveScore: function() {
 		
 	},
 
-	playAgain: function(){
+	playAgain: function() {
 		starMath.state.start('Game');
 	},
 
-	backToMenu: function(){
+	backToMenu: function() {
 		starMath.state.start('Menu');
 	}
 };

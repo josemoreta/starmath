@@ -1,11 +1,10 @@
 var ChooseLevels = {
-
 	preload: function(){
-		this.load.image('imgLevel1', 'recursos/imagens/level1.png');
-		this.load.image('imgLevel2', 'recursos/imagens/level2.png');
-		this.load.image('imgLevel3', 'recursos/imagens/level3.png');
-		this.load.image('imgLevel4', 'recursos/imagens/level4.png');
-		this.load.image('menuButton', 'recursos/imagens/button-menu.png');
+		this.load.image('imgLevel1', 'resources/imagens/level1.png');
+		this.load.image('imgLevel2', 'resources/imagens/level2.png');
+		this.load.image('imgLevel3', 'resources/imagens/level3.png');
+		this.load.image('imgLevel4', 'resources/imagens/level4.png');
+		this.load.image('menuButton', 'resources/imagens/button-menu.png');
 	},
 
 	create: function(){
